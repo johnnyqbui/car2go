@@ -10,7 +10,7 @@ import MapDetail from './components/MapDetail';
 import DashBoard from './components/DashBoard';
 import Earnings from './components/Earnings';
 import Account from './components/Account';
-import { gray, purple, white, blue } from './utils/helpers'
+import { white, cyan } from './utils/colors'
 
 const C2GStatusBar = ({backgroundColor, ...props}) => {
   return (
@@ -24,28 +24,28 @@ const Tabs = TabNavigator({
     screen: MapDetail,
     navigationOptions: {
       tabBarLabel: "Home",
-      tabBarIcon: ({ tintColor }) => <FontAwesome name="home" size={30} color="black" color={tintColor} />
+      tabBarIcon: ({ tintColor }) => <FontAwesome name="home" size={30} color={tintColor} />
     }
   },
   DashBoard: {
     screen: DashBoard,
     navigationOptions: {
       tabBarLabel: "DashBoard",
-      tabBarIcon: ({ tintColor }) => <FontAwesome name="dashboard" size={30} color="black" color={tintColor} />
+      tabBarIcon: ({ tintColor }) => <FontAwesome name="dashboard" size={30} color={tintColor} />
     }
   },
   Earnings: {
     screen: Earnings,
     navigationOptions: {
       tabBarLabel: "Earnings",
-      tabBarIcon: ({ tintColor }) => <MaterialIcons name="attach-money" size={30} color="black" color={tintColor} />
+      tabBarIcon: ({ tintColor }) => <MaterialIcons name="attach-money" size={30} color={tintColor} />
     }
   },
   Account: {
     screen: Account,
     navigationOptions: {
       tabBarLabel: "Account",
-      tabBarIcon: ({ tintColor }) => <MaterialCommunityIcons name="account" size={30} color="black" color={tintColor} />
+      tabBarIcon: ({ tintColor }) => <MaterialCommunityIcons name="account" size={30} color={tintColor} />
     }
   }
 }, {
@@ -55,17 +55,10 @@ const Tabs = TabNavigator({
   tabBarPosition: 'bottom',
   animationEnabled: true,
   tabBarOptions: {
-    activeTintColor: purple,
-    styles: {
+    activeTintColor: cyan,
+    style: {
       height: 56,
-      backgroundColor: 'rgb(18, 34, 58)',
-      shadowColor: 'rgba(18, 34, 58, .24)',
-      shadowOffset: {
-        width: 0,
-        height: 3
-      },
-      shadowRadius: 6,
-      shadowOpactiy: 1
+      backgroundColor: 'white',
     }
   }
 })
@@ -79,7 +72,7 @@ const MainNavigator = StackNavigator({
     navigationOptions: {
       headerTintColor: 'white',
       headerStyle: {
-        backgroundColor: gray
+        backgroundColor: cyan
       }
     }
   }
@@ -96,7 +89,7 @@ export default class App extends Component {
     return (
       <Provider store={createStore(reducer)}>
         <View style={{flex: 1}}>
-          <C2GStatusBar backgroundColor={blue} barStyle="default" />
+          <C2GStatusBar backgroundColor='white' barStyle="default" />
           <MainNavigator />
         </View>
       </Provider>

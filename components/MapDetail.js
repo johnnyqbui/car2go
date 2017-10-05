@@ -5,17 +5,17 @@ import { FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@e
 import { connect } from 'react-redux'
 import { addEntry } from '../actions'
 import MapView from 'react-native-maps'
-import { white } from '../utils/helpers'
+import { white, blue } from '../utils/colors'
 
 class MapDetail extends Component {
   state = {
     status: null,
     currentLocation: null,
     region: {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitude: 30.2672,
+      longitude: -97.7431,
+      latitudeDelta: 0.2822,
+      longitudeDelta: 0.3021,
     },
     ready: false
   }
@@ -68,7 +68,7 @@ class MapDetail extends Component {
             style={[styles.button, styles.getLocationButton]}
             onPress={this.getLocation}
             underlayColor='grey'>
-            <MaterialIcons name="my-location" size={30} color={"black"}/>
+            <MaterialIcons name="my-location" size={30} color='black'/>
           </TouchableHighlight>
       </View>
     )
@@ -89,11 +89,14 @@ const styles = StyleSheet.create({
   },
   getLocationButton: {
     zIndex: 3,
-    bottom: 50,
+    bottom: 0,
     right: 0,
     margin: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    position: 'absolute',
+    backgroundColor: 'white',
+    borderRadius: 5
   },
   map: {
     height: height,
