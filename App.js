@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { AppLoading, Constants } from 'expo'
-import { FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { TabNavigator, StackNavigator, DrawerNavigator } from 'react-navigation';
 import MapDetail from './components/MapDetail';
 import DashBoard from './components/DashBoard';
