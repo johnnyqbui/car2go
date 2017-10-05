@@ -1,61 +1,41 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { Entypo, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons'
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { Entypo, MaterialIcons } from '@expo/vector-icons'
 import { cyan, gray, lightGray } from '../utils/colors'
 
-export default function Account () {
+export default function Earnings () {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <Image source={require('../img/logo.png')}/>
         <Text style={{color: cyan, fontSize: 25}}>
-          Estimated Payout $95.74
+          Fleetshifter
         </Text>
       </View>
 
       <TouchableOpacity style={styles.link}>
-        <Entypo name="share" style={styles.icon} size={25} />
+        <MaterialIcons name="person" style={styles.icon} size={25} />
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
-            Invites
-          </Text>
-          <Text style={styles.subText}>
-            Earn extra $50 for every friend you refer to drive!
+            Login
           </Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.link}>
-        <SimpleLineIcons name="notebook" style={styles.icon} size={25} />
+        <MaterialIcons name="person-add" style={styles.icon} size={25} />
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
-            Trip History
-          </Text>
-          <Text style={styles.subText}>
-            Last Trip: $10.20
+            Register
           </Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.link}>
-        <Entypo name="credit-card" style={styles.icon} size={25} />
+        <Entypo name="text-document-inverted" style={styles.icon} size={25} />
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
-            Instant Pay
-          </Text>
-          <Text style={styles.subText}>
-            Cash out your eearnings for free anytime
-          </Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.link}>
-        <MaterialIcons name="view-week" style={styles.icon} size={25} />
-        <View style={{flexDirection: 'column'}}>
-          <Text style={styles.text}>
-            Weekly Earnings
-          </Text>
-          <Text style={styles.subText}>
-            Last week's earnings: $120.24
+            Documents
           </Text>
         </View>
       </TouchableOpacity>
@@ -71,6 +51,7 @@ const styles = StyleSheet.create({
   header: {
     margin: 50,
     alignItems: 'center',
+    flexDirection: 'row'
   },
   link: {
     flex: 1,

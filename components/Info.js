@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { cyan, gray, lightGray } from '../utils/colors'
 
-export default function Account () {
+export default function Info () {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.link}>
@@ -16,19 +16,10 @@ export default function Account () {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.link}>
-        <MaterialIcons name="receipt" style={styles.icon} size={25} />
+        <FontAwesome name="exclamation-circle" style={styles.icon} size={25} />
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
-            Waybill
-          </Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.link}>
-        <Entypo name="text-document-inverted" style={styles.icon} size={25} />
-        <View style={{flexDirection: 'column'}}>
-          <Text style={styles.text}>
-            Documents
+            About
           </Text>
         </View>
       </TouchableOpacity>
@@ -38,15 +29,6 @@ export default function Account () {
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
             Settings
-          </Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.link}>
-        <FontAwesome name="exclamation-circle" style={styles.icon} size={25} />
-        <View style={{flexDirection: 'column'}}>
-          <Text style={styles.text}>
-            About
           </Text>
         </View>
       </TouchableOpacity>

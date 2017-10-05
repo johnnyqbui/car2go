@@ -24,6 +24,10 @@ class MapDetail extends Component {
     console.log(navigation)
   }
 
+  componentDidMount() {
+    console.log('mount dummy car data here')
+  }
+
   getLocation = () => {
     Permissions.getAsync(Permissions.LOCATION)
     .then(({ status }) => {

@@ -9,7 +9,7 @@ import { TabNavigator, StackNavigator, DrawerNavigator } from 'react-navigation'
 import MapDetail from './components/MapDetail';
 import DashBoard from './components/DashBoard';
 import Earnings from './components/Earnings';
-import Account from './components/Account';
+import Info from './components/Info';
 import { white, cyan } from './utils/colors'
 
 const C2GStatusBar = ({backgroundColor, ...props}) => {
@@ -41,11 +41,11 @@ const Tabs = TabNavigator({
       tabBarIcon: ({ tintColor }) => <MaterialIcons name="attach-money" size={30} color={tintColor} />
     }
   },
-  Account: {
-    screen: Account,
+  Info: {
+    screen: Info,
     navigationOptions: {
-      tabBarLabel: "Account",
-      tabBarIcon: ({ tintColor }) => <MaterialCommunityIcons name="account" size={30} color={tintColor} />
+      tabBarLabel: "Info",
+      tabBarIcon: ({ tintColor }) => <FontAwesome name="exclamation-circle" size={30} color={tintColor} />
     }
   }
 }, {
@@ -53,7 +53,7 @@ const Tabs = TabNavigator({
     header: null,
   },
   tabBarPosition: 'bottom',
-  animationEnabled: true,
+  animationEnabled: false,
   tabBarOptions: {
     activeTintColor: cyan,
     style: {
