@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, Animated, TouchableHighlight } from 'react-native';
-import { Location, Permissions } from 'expo'
+import { AppLoading, Location, Permissions } from 'expo'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import MapView from 'react-native-maps'
 import * as Animatable from 'react-native-animatable';
@@ -15,6 +15,7 @@ export default class App extends Component {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     },
+    ready: false
   }
 
   getLocation = () => {
@@ -43,7 +44,6 @@ export default class App extends Component {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         },
-        bottom: 0
       })
     })
   }
@@ -57,7 +57,12 @@ export default class App extends Component {
   }
 
   render() {
-    const { bottom } = this.state;
+    // For data loading
+    // const { ready } = this.state;
+    // if (ready === false) {
+    //   return <AppLoading/>
+    // }
+
     return (
       <View>
         <MapView
@@ -71,16 +76,6 @@ export default class App extends Component {
           onPress={this.openMenu}
           underlayColor='cyan'>
           <Ionicons name="ios-menu" size={40}/>
-        </TouchableHighlight>
-
-        <TouchableHighlight
-          ref="button"
-          style={[styles.button, styles.moreInfoButton]}
-          onPress={this.openInfoBox}
-          underlayColor='cyan'>
-          <Text>
-            More
-          </Text>
         </TouchableHighlight>
 
         <TouchableHighlight
@@ -98,6 +93,22 @@ export default class App extends Component {
             More Info here.
           </Text>
         </Animatable.View>
+        <View
+          style={styles.mainContainer}>
+          <View
+            style={styles.box}
+            onPress={this.openInfoBox}>
+          </View>
+          <View
+            style={styles.box}>
+          </View>
+          <View
+            style={styles.box}>
+          </View>
+          <View
+            style={styles.box}>
+          </View>
+        </View>
       </View>
     );
   }
@@ -105,6 +116,22 @@ export default class App extends Component {
 
 const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
+  mainContainer: {
+    zIndex: 3,
+    flex: 1,
+    flexDirection: 'row',
+    position: 'absolute',
+    width: width,
+    justifyContent: 'space-around',
+    bottom: 0,
+    backgroundColor: 'rgb(5, 10, 48)'
+  },
+  box: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'white',
+    margin: 10
+  },
 	logo: {
 		flex: 1,
 		alignItems: 'center',
@@ -116,30 +143,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     height: 200,
     width: width,
-    bottom: 0
+    bottom: 0,
   },
   infoBoxText: {
     margin: 10
   },
-   button: {
+  button: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: '#fff',
     borderRadius: 10,
     margin: 10,
   },
-   menuButton: {
+  menuButton: {
    	top: 15,
     paddingHorizontal: 30,
     paddingVertical: 10,
   },
-  moreInfoButton: {
-    bottom: 200,
-    paddingHorizontal: 40,
-    paddingVertical: 20,
-  },
   getLocationButton: {
-    bottom: 200,
+    zIndex: 3,
+    bottom: 75,
     right: 0,
     paddingHorizontal: 20,
     paddingVertical: 10,
