@@ -43,7 +43,7 @@ export default function Earnings () {
             Instant Pay
           </Text>
           <Text style={styles.subText}>
-            Cash out your eearnings for free anytime
+            Cash out your earnings for free anytime
           </Text>
         </View>
       </TouchableOpacity>
