@@ -1,9 +1,69 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, Animated, TouchableHighlight } from 'react-native';
 import { AppLoading, Location, Permissions } from 'expo'
-import { FontAwesome, Ionicons } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import MapView from 'react-native-maps'
 import * as Animatable from 'react-native-animatable';
+import { TabNavigator, StackNavigator, DrawerNavigator } from 'react-navigation';
+
+const Home = () => {
+  return (
+    <View style={styles.container}>
+      <Text>Home</Text>
+    </View>
+  )
+}
+
+const DashBoard = () => {
+  return (
+    <View style={styles.container}>
+      <Text>DashBoard</Text>
+    </View>
+  )
+}
+
+const Earnings = () => {
+  return (
+    <View style={styles.container}>
+      <Text>Earnings</Text>
+    </View>
+  )
+}
+
+const Account = () => {
+  return (
+    <View style={styles.container}>
+      <Text>Account</Text>
+    </View>
+  )
+}
+
+const Tabs = TabNavigator({
+  Home: {
+    screen: Home,
+    navigationOptions: {
+      tabBarIcon: () => <FontAwesome name="home" size={30} color="black" />
+    }
+  },
+  DashBoard: {
+    screen: DashBoard,
+    navigationOptions: {
+      tabBarIcon: () => <FontAwesome name="dashboard" size={30} color="black" />
+    }
+  },
+  Earnings: {
+    screen: Earnings,
+    navigationOptions: {
+      tabBarIcon: () => <MaterialIcons name="attach-money" size={30} color="black" />
+    }
+  },
+  Account: {
+    screen: Account,
+    navigationOptions: {
+      tabBarIcon: () => <MaterialCommunityIcons name="account" size={30} color="black" />
+    }
+  }
+})
 
 export default class App extends Component {
   state = {
@@ -48,14 +108,6 @@ export default class App extends Component {
     })
   }
 
-  openInfoBox = () => {
-    this.refs.info.transitionTo({bottom: 0})
-  }
-
-  closeInfoBox = () => {
-    this.refs.info.transitionTo({bottom: -200})
-  }
-
   render() {
     // For data loading
     // const { ready } = this.state;
@@ -71,52 +123,51 @@ export default class App extends Component {
           showsUserLocation={true}
           onPress={this.closeInfoBox}
         />
-        <TouchableHighlight
-          style={[styles.button, styles.menuButton]}
-          onPress={this.openMenu}
-          underlayColor='cyan'>
-          <Ionicons name="ios-menu" size={40}/>
-        </TouchableHighlight>
 
         <TouchableHighlight
           ref="location"
           style={[styles.button, styles.getLocationButton]}
           onPress={this.getLocation}
-          underlayColor='cyan'>
-          <FontAwesome name="location-arrow" size={40} color={"#07a8ff"}/>
+          underlayColor='grey'>
+          <MaterialIcons name="my-location" size={30} color={"black"}/>
         </TouchableHighlight>
 
-        <Animatable.View
-          ref="info"
-          style={styles.infoBox}>
-          <Text style={styles.infoBoxText}>
-            More Info here.
-          </Text>
-        </Animatable.View>
-        <View
-          style={styles.mainContainer}>
-          <View
-            style={styles.box}
-            onPress={this.openInfoBox}>
-          </View>
-          <View
-            style={styles.box}>
-          </View>
-          <View
-            style={styles.box}>
-          </View>
-          <View
-            style={styles.box}>
-          </View>
+        <View style={styles.container}>
+          <Tabs />
         </View>
       </View>
     );
   }
 }
 
+/*<Animatable.View
+  ref="info"
+  style={styles.infoBox}>
+  <Text style={styles.infoBoxText}>
+    More Info here.
+  </Text>
+</Animatable.View>
+<View
+  style={styles.mainContainer}>
+  <View
+    style={styles.box}
+    onPress={this.openInfoBox}>
+  </View>
+  <View
+    style={styles.box}>
+  </View>
+  <View
+    style={styles.box}>
+  </View>
+  <View
+    style={styles.box}>
+  </View>
+</View>
+*/
+
 const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
-  mainContainer: {
+  container: {
     zIndex: 3,
     flex: 1,
     flexDirection: 'row',
@@ -155,16 +206,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
   },
-  menuButton: {
-   	top: 15,
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-  },
   getLocationButton: {
     zIndex: 3,
-    bottom: 75,
+    bottom: 50,
     right: 0,
-    paddingHorizontal: 20,
+    margin: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10,
   },
   map: {
