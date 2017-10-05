@@ -1,113 +1,91 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, Animated, TouchableHighlight } from 'react-native';
-import { AppLoading, Location, Permissions } from 'expo'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import reducer from './reducers'
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { AppLoading, Constants } from 'expo'
 import { FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import MapView from 'react-native-maps'
-import * as Animatable from 'react-native-animatable';
 import { TabNavigator, StackNavigator, DrawerNavigator } from 'react-navigation';
+import MapDetail from './components/MapDetail';
+import DashBoard from './components/DashBoard';
+import Earnings from './components/Earnings';
+import Account from './components/Account';
+import { gray, purple, white, blue } from './utils/helpers'
 
-const Home = () => {
+const C2GStatusBar = ({backgroundColor, ...props}) => {
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
+    <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
     </View>
   )
 }
-
-const DashBoard = () => {
-  return (
-    <View style={styles.container}>
-      <Text>DashBoard</Text>
-    </View>
-  )
-}
-
-const Earnings = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Earnings</Text>
-    </View>
-  )
-}
-
-const Account = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Account</Text>
-    </View>
-  )
-}
-
 const Tabs = TabNavigator({
-  Home: {
-    screen: Home,
+  MapDetail: {
+    screen: MapDetail,
     navigationOptions: {
-      tabBarIcon: () => <FontAwesome name="home" size={30} color="black" />
+      tabBarLabel: "Home",
+      tabBarIcon: ({ tintColor }) => <FontAwesome name="home" size={30} color="black" color={tintColor} />
     }
   },
   DashBoard: {
     screen: DashBoard,
     navigationOptions: {
-      tabBarIcon: () => <FontAwesome name="dashboard" size={30} color="black" />
+      tabBarLabel: "DashBoard",
+      tabBarIcon: ({ tintColor }) => <FontAwesome name="dashboard" size={30} color="black" color={tintColor} />
     }
   },
   Earnings: {
     screen: Earnings,
     navigationOptions: {
-      tabBarIcon: () => <MaterialIcons name="attach-money" size={30} color="black" />
+      tabBarLabel: "Earnings",
+      tabBarIcon: ({ tintColor }) => <MaterialIcons name="attach-money" size={30} color="black" color={tintColor} />
     }
   },
   Account: {
     screen: Account,
     navigationOptions: {
-      tabBarIcon: () => <MaterialCommunityIcons name="account" size={30} color="black" />
+      tabBarLabel: "Account",
+      tabBarIcon: ({ tintColor }) => <MaterialCommunityIcons name="account" size={30} color="black" color={tintColor} />
+    }
+  }
+}, {
+  navigationOptions: {
+    header: null,
+  },
+  tabBarPosition: 'bottom',
+  animationEnabled: true,
+  tabBarOptions: {
+    activeTintColor: purple,
+    styles: {
+      height: 56,
+      backgroundColor: 'rgb(18, 34, 58)',
+      shadowColor: 'rgba(18, 34, 58, .24)',
+      shadowOffset: {
+        width: 0,
+        height: 3
+      },
+      shadowRadius: 6,
+      shadowOpactiy: 1
+    }
+  }
+})
+
+const MainNavigator = StackNavigator({
+  Home: {
+    screen: Tabs
+  },
+  EntryDetail: {
+    screen: MapDetail,
+    navigationOptions: {
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: gray
+      }
     }
   }
 })
 
 export default class App extends Component {
-  state = {
-    status: null,
-    currentLocation: null,
-    region: {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
-    ready: false
-  }
-
-  getLocation = () => {
-    Permissions.getAsync(Permissions.LOCATION)
-    .then(({ status }) => {
-      if (status === 'granted') {
-        this.setLocation()
-      }
-      this.setState({
-        status
-      })
-    })
-    .catch((error) => {
-      console.warn('Error obtaining Location Permission: ', error)
-      this.setState({ status: 'denied' })
-    })
-  }
-
-  setLocation = () => {
-    Location.getCurrentPositionAsync({}).then((currentLocation) => {
-      this.setState({
-        currentLocation: currentLocation.coords,
-        region: {
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        },
-      })
-    })
-  }
-
   render() {
     // For data loading
     // const { ready } = this.state;
@@ -116,106 +94,12 @@ export default class App extends Component {
     // }
 
     return (
-      <View>
-        <MapView
-          style={styles.map}
-          region={this.state.region}
-          showsUserLocation={true}
-          onPress={this.closeInfoBox}
-        />
-
-        <TouchableHighlight
-          ref="location"
-          style={[styles.button, styles.getLocationButton]}
-          onPress={this.getLocation}
-          underlayColor='grey'>
-          <MaterialIcons name="my-location" size={30} color={"black"}/>
-        </TouchableHighlight>
-
-        <View style={styles.container}>
-          <Tabs />
+      <Provider store={createStore(reducer)}>
+        <View style={{flex: 1}}>
+          <C2GStatusBar backgroundColor={blue} barStyle="default" />
+          <MainNavigator />
         </View>
-      </View>
+      </Provider>
     );
   }
 }
-
-/*<Animatable.View
-  ref="info"
-  style={styles.infoBox}>
-  <Text style={styles.infoBoxText}>
-    More Info here.
-  </Text>
-</Animatable.View>
-<View
-  style={styles.mainContainer}>
-  <View
-    style={styles.box}
-    onPress={this.openInfoBox}>
-  </View>
-  <View
-    style={styles.box}>
-  </View>
-  <View
-    style={styles.box}>
-  </View>
-  <View
-    style={styles.box}>
-  </View>
-</View>
-*/
-
-const {height, width} = Dimensions.get('window');
-const styles = StyleSheet.create({
-  container: {
-    zIndex: 3,
-    flex: 1,
-    flexDirection: 'row',
-    position: 'absolute',
-    width: width,
-    justifyContent: 'space-around',
-    bottom: 0,
-    backgroundColor: 'rgb(5, 10, 48)'
-  },
-  box: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'white',
-    margin: 10
-  },
-	logo: {
-		flex: 1,
-		alignItems: 'center',
-		marginLeft: 50
-	},
-  infoBox: {
-    position: 'absolute',
-    zIndex: 2,
-    backgroundColor: '#fff',
-    height: 200,
-    width: width,
-    bottom: 0,
-  },
-  infoBoxText: {
-    margin: 10
-  },
-  button: {
-    position: 'absolute',
-    zIndex: 2,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    margin: 10,
-  },
-  getLocationButton: {
-    zIndex: 3,
-    bottom: 50,
-    right: 0,
-    margin: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  map: {
-    height: height,
-    width: width
-  },
-});
