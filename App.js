@@ -3,14 +3,9 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
 import { View, StatusBar } from 'react-native';
-import { AppLoading, Constants } from 'expo'
-import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { TabNavigator, StackNavigator, DrawerNavigator } from 'react-navigation';
-import MapDetail from './components/MapDetail';
-import DashBoard from './components/DashBoard';
-import Earnings from './components/Earnings';
-import Info from './components/Info';
-import { white, cyan } from './utils/colors'
+import { Constants } from 'expo'
+import { createRootNavigator } from "./router";
+import { isLoggedIn } from "./auth/_auth";
 
 const C2GStatusBar = ({backgroundColor, ...props}) => {
   return (
@@ -19,78 +14,25 @@ const C2GStatusBar = ({backgroundColor, ...props}) => {
     </View>
   )
 }
-const Tabs = TabNavigator({
-  MapDetail: {
-    screen: MapDetail,
-    navigationOptions: {
-      tabBarLabel: "Home",
-      tabBarIcon: ({ tintColor }) => <FontAwesome name="home" size={30} color={tintColor} />
-    }
-  },
-  DashBoard: {
-    screen: DashBoard,
-    navigationOptions: {
-      tabBarLabel: "DashBoard",
-      tabBarIcon: ({ tintColor }) => <FontAwesome name="dashboard" size={30} color={tintColor} />
-    }
-  },
-  Earnings: {
-    screen: Earnings,
-    navigationOptions: {
-      tabBarLabel: "Earnings",
-      tabBarIcon: ({ tintColor }) => <MaterialIcons name="attach-money" size={30} color={tintColor} />
-    }
-  },
-  Info: {
-    screen: Info,
-    navigationOptions: {
-      tabBarLabel: "Info",
-      tabBarIcon: ({ tintColor }) => <FontAwesome name="exclamation-circle" size={30} color={tintColor} />
-    }
-  }
-}, {
-  navigationOptions: {
-    header: null,
-  },
-  tabBarPosition: 'bottom',
-  animationEnabled: false,
-  tabBarOptions: {
-    activeTintColor: cyan,
-    style: {
-      height: 56,
-      backgroundColor: 'white',
-    }
-  }
-})
-
-const MainNavigator = StackNavigator({
-  Home: {
-    screen: Tabs
-  },
-  EntryDetail: {
-    screen: MapDetail,
-    navigationOptions: {
-      headerTintColor: 'white',
-      headerStyle: {
-        backgroundColor: cyan
-      }
-    }
-  }
-})
 
 export default class App extends Component {
+  state = {
+    loggedIn: false
+  }
+
+  componentWillMount() {
+    isLoggedIn().then()
+  }
+
   render() {
-    // For data loading
-    // const { ready } = this.state;
-    // if (ready === false) {
-    //   return <AppLoading/>
-    // }
+    const { loggedIn } = this.state
+    const Layout = createRootNavigator(loggedIn);
 
     return (
       <Provider store={createStore(reducer)}>
         <View style={{flex: 1}}>
           <C2GStatusBar backgroundColor='white' barStyle="default" />
-          <MainNavigator />
+          <Layout />
         </View>
       </Provider>
     );

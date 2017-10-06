@@ -21,7 +21,7 @@ class MapDetail extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    console.log(navigation)
+    console.log(navigation.navigate)
   }
 
   componentDidMount() {
