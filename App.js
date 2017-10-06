@@ -6,6 +6,7 @@ import { View, StatusBar } from 'react-native';
 import { Constants } from 'expo'
 import { createRootNavigator } from "./router";
 import { isLoggedIn } from "./auth/_auth";
+import { darkBlue } from './utils/colors'
 
 const C2GStatusBar = ({backgroundColor, ...props}) => {
   return (
@@ -21,7 +22,7 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    isLoggedIn().then()
+    isLoggedIn().then( res => console.log('login attempt', res))
   }
 
   render() {
@@ -31,7 +32,7 @@ export default class App extends Component {
     return (
       <Provider store={createStore(reducer)}>
         <View style={{flex: 1}}>
-          <C2GStatusBar backgroundColor='white' barStyle="default" />
+          <C2GStatusBar backgroundColor={darkBlue} barStyle="light-content" />
           <Layout />
         </View>
       </Provider>

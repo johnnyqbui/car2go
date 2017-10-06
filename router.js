@@ -10,17 +10,12 @@ import Earnings from "./components/Earnings";
 import Info from "./components/Info";
 import { white, cyan } from './utils/colors'
 
-const headerStyle = {
-  marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
-};
-
 // Place all routes for different screens
 export const LoggedOut = StackNavigator({
   Login: {
     screen: Login,
     navigationOptions: {
-      title: "Log In",
-      headerStyle
+      header: null
     }
   }
 });
@@ -62,8 +57,8 @@ export const LoggedIn = TabNavigator({
   navigationOptions: {
     header: null,
   },
-  tabBarPosition: 'bottom',
   animationEnabled: false,
+  tabBarPosition: 'bottom',
   tabBarOptions: {
     activeTintColor: cyan,
     style: {
@@ -74,6 +69,7 @@ export const LoggedIn = TabNavigator({
   }
 });
 
+// Default screen is login
 export const createRootNavigator = (loggedIn) => {
   return StackNavigator(
     {
