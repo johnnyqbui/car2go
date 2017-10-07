@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { cyan, gray, lightGray } from '../utils/colors'
 
-export default function Info () {
+export default function Profile () {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.link}>

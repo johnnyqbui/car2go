@@ -6,6 +6,7 @@ import * as Progress from 'react-native-progress';
 
 export default class LoadingScreen extends Component {
   static defaultProps = {
+    // Must set between 0.1 - 1
     progressIncrements: 1,
     progressDuration: 1500
   }
@@ -33,7 +34,7 @@ export default class LoadingScreen extends Component {
     const { progress } = this.state;
     const { navigation, progressIncrements } = this.props;
 
-    if (progress === 1) {
+    if (progress >= 1) {
       clearInterval(this.state.timer)
       navigation.navigate("LoggedIn")
     } else {

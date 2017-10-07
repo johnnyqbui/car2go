@@ -8,7 +8,7 @@ import Login from "./components/Login";
 import DashBoard from "./components/DashBoard";
 import MapDetail from "./components/MapDetail";
 import Earnings from "./components/Earnings";
-import Info from "./components/Info";
+import Profile from "./components/Profile";
 import { white, cyan } from './utils/colors'
 
 // Place all routes for different screens
@@ -22,14 +22,6 @@ export const LoggedIn = TabNavigator({
         <FontAwesome name="home" size={30} color={tintColor} />
     }
   },
-  DashBoard: {
-    screen: DashBoard,
-    navigationOptions: {
-      tabBarLabel: "DashBoard",
-      tabBarIcon: ({ tintColor }) => 
-        <FontAwesome name="dashboard" size={30} color={tintColor} />
-    }
-  },
   Earnings: {
     screen: Earnings,
     navigationOptions: {
@@ -38,10 +30,10 @@ export const LoggedIn = TabNavigator({
         <MaterialIcons name="attach-money" size={30} color={tintColor} />
     }
   },
-  Info: {
-    screen: Info,
+  Profile: {
+    screen: Profile,
     navigationOptions: {
-      tabBarLabel: "Info",
+      tabBarLabel: "Profile",
       tabBarIcon: ({ tintColor }) => 
         <FontAwesome name="exclamation-circle" size={30} color={tintColor} />
     }
