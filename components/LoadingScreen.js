@@ -5,16 +5,22 @@ import { lightGray, blue } from '../utils/colors'
 import * as Progress from 'react-native-progress';
 
 export default class LoadingScreen extends Component {
+  static defaultProps = {
+    progressIncrements: 1,
+    progressDuration: 1500
+  }
+
   state = {
     timer: null,
     progress: 0,
   };
 
   componentDidMount() {
-    const timer = setInterval(this.navigate, 1500);
+    const { progressIncrements, progressDuration } = this.props;
+    const timer = setInterval(this.progress, progressDuration);
     this.setState(state => ({
       timer,
-      progress: state.progress + 1,
+      progress: state.progress + progressIncrements,
     }))
   }
 
@@ -22,18 +28,24 @@ export default class LoadingScreen extends Component {
     clearInterval(this.state.timer)
   }
 
-  navigate = () => {
+  progress = () => {
     // if loading is done, then navigate to loggin screen
     const { progress } = this.state;
-    const { navigation } = this.props;
+    const { navigation, progressIncrements } = this.props;
+
     if (progress === 1) {
       clearInterval(this.state.timer)
       navigation.navigate("LoggedIn")
+    } else {
+      this.setState(state => ({
+        progress: state.progress + progressIncrements,
+      }))
     }
   }
 
   render() {
     const { progress } = this.state;
+    const { progressDuration } = this.props;
     return (
       <View style={styles.container}>
         <Text style={styles.text}>Acquiring GPS...</Text>
@@ -48,7 +60,7 @@ export default class LoadingScreen extends Component {
             borderColor={'rgba(0,0,0,0)'}
             animationType={'timing'}
             animationConfig={{
-              duration: 1500,
+              duration: progressDuration,
               easing: Easing.out(Easing.ease),
             }}
           />

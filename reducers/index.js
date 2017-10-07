@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import { RECEIVE_CARS, ADD_ENTRY } from '../actions'
 
 function entries (state = {}, action) {
@@ -12,4 +13,6 @@ function entries (state = {}, action) {
   }
 }
 
-export default entries
+export default combineReducers({
+	entries
+})
