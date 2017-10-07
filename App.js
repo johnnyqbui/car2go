@@ -22,7 +22,7 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    isLoggedIn().then( res => console.log('login attempt', res))
+    isLoggedIn().then( res => console.log('auto login, set to do nothing for now', res))
   }
 
   render() {

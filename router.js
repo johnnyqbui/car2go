@@ -3,6 +3,7 @@ import { Platform, StatusBar } from "react-native";
 import { StackNavigator, TabNavigator } from "react-navigation";
 import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
+import LoadingScreen from "./components/LoadingScreen";
 import Login from "./components/Login";
 import DashBoard from "./components/DashBoard";
 import MapDetail from "./components/MapDetail";
@@ -11,14 +12,6 @@ import Info from "./components/Info";
 import { white, cyan } from './utils/colors'
 
 // Place all routes for different screens
-export const LoggedOut = StackNavigator({
-  Login: {
-    screen: Login,
-    navigationOptions: {
-      header: null
-    }
-  }
-});
 
 export const LoggedIn = TabNavigator({
   MapDetail: {
@@ -73,18 +66,25 @@ export const LoggedIn = TabNavigator({
 export const createRootNavigator = (loggedIn) => {
   return StackNavigator(
     {
+      LoggedOut: {
+        screen: Login,
+        navigationOptions: {
+          gesturesEnabled: false,
+          header: null
+        }
+      },
+      LoadingScreen: {
+        screen: LoadingScreen,
+        navigationOptions: {
+          header: null
+        }
+      },
       LoggedIn: {
         screen: LoggedIn,
         navigationOptions: {
           gesturesEnabled: false
         }
       },
-      LoggedOut: {
-        screen: LoggedOut,
-        navigationOptions: {
-          gesturesEnabled: false
-        }
-      }
     },
     {
       headerMode: "none",

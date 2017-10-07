@@ -20,10 +20,6 @@ class MapDetail extends Component {
     ready: false
   }
 
-  static navigationOptions = ({ navigation }) => {
-    console.log(navigation.navigate)
-  }
-
   componentDidMount() {
     console.log('mount dummy car data here')
   }
@@ -62,18 +58,18 @@ class MapDetail extends Component {
     return (
       <View style={styles.container}>
         <MapView
-            style={styles.map}
-            region={this.state.region}
-            showsUserLocation={true}
-          />
+          style={styles.map}
+          region={this.state.region}
+          showsUserLocation={true}
+        />
 
-          <TouchableHighlight
-            ref="location"
-            style={[styles.button, styles.getLocationButton]}
-            onPress={this.getLocation}
-            underlayColor='grey'>
-            <MaterialIcons name="my-location" size={30} color='black'/>
-          </TouchableHighlight>
+        <TouchableHighlight
+          ref="location"
+          style={[styles.button, styles.getLocationButton]}
+          onPress={this.getLocation}
+          underlayColor='grey'>
+          <MaterialIcons name="my-location" size={30} color='black'/>
+        </TouchableHighlight>
       </View>
     )
   }
@@ -110,14 +106,12 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps (state, { navigation }) {
-  console.log(navigation)
   return {
     state,
   }
 }
 
 function mapDispatchToProps (dispatch, { navigation }) {
-  console.log(navigation)
   return {
     goBack: () => navigation.goBack(),
   }
