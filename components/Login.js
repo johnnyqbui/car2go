@@ -31,7 +31,7 @@ export default ({ navigation }) => (
       backgroundColor= { blue }
       title="Sign In with Car2Go"
       onPress={() => {
-        onLogIn().then(() => navigation.navigate("LoadingScreen"));
+        onLogIn().then(() => navigation.navigate("LoggedIn"));
       }}
     />
   </View>

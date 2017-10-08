@@ -36,7 +36,7 @@ export default class LoadingScreen extends Component {
 
     if (progress >= 1) {
       clearInterval(this.state.timer)
-      navigation.navigate("LoggedIn")
+      // navigation.navigate("LoggedIn")
     } else {
       this.setState(state => ({
         progress: state.progress + progressIncrements,
@@ -47,6 +47,7 @@ export default class LoadingScreen extends Component {
   render() {
     const { progress } = this.state;
     const { progressDuration } = this.props;
+    console.log('loading')
     return (
       <View style={styles.container}>
         <Text style={styles.text}>Acquiring GPS...</Text>

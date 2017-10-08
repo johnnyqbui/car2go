@@ -65,12 +65,6 @@ export const createRootNavigator = (loggedIn) => {
           header: null
         }
       },
-      LoadingScreen: {
-        screen: LoadingScreen,
-        navigationOptions: {
-          header: null
-        }
-      },
       LoggedIn: {
         screen: LoggedIn,
         navigationOptions: {
