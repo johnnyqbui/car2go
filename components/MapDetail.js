@@ -19,7 +19,9 @@ class MapDetail extends Component {
       latitudeDelta: 0.2822,
       longitudeDelta: 0.3021,
     },
-    markers: []
+    markers: [],
+    selectedMarker: null,
+    selectedMarkerColor: ''
   }
 
   componentDidMount() {
@@ -80,8 +82,10 @@ class MapDetail extends Component {
           latitude: randomLatitude,
           longitude: randomLongitude
         },
-        title: 'Some random vehicle',
-        description: 'Bounty info'
+        id: i,
+        bounty: 'Bounty rate',
+        description: 'Car model, mileage, fuel level, etc.',
+        location: 'Address of vehicle location'
       })
     }
 
@@ -108,8 +112,16 @@ class MapDetail extends Component {
     })
   }
 
+  openInfoBox = (marker) => {
+    console.log(marker)
+    this.setState({
+      selectedMarker: marker.id,
+      selectedMarkerColor: 'green'
+    })
+  }
+
   render() {
-    const { status, coords, direction } = this.state
+    const { status, direction, selectedMarker, selectedMarkerColor } = this.state
     const { navigation } = this.props;
 
     if (status === null) {
@@ -140,9 +152,9 @@ class MapDetail extends Component {
               <MapView.Marker
                 key={i}
                 coordinate={marker.latlng}
-                title={marker.title}
-                description={marker.description}
                 zIndex={i}
+                pinColor={i === selectedMarker ? selectedMarkerColor : 'red'}
+                onPress={() => this.openInfoBox(marker)}
               />
             )}
           </MapView>

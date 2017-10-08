@@ -47,7 +47,6 @@ export default class LoadingScreen extends Component {
   render() {
     const { progress } = this.state;
     const { progressDuration } = this.props;
-    console.log('loading')
     return (
       <View style={styles.container}>
         <Text style={styles.text}>Acquiring GPS...</Text>
