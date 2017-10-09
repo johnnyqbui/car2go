@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Dimensions, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Animated, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { AppLoading, Location, Permissions, Constants } from 'expo'
 import { Foundation, FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
@@ -8,20 +8,16 @@ import MapView from 'react-native-maps'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
 
+import { getAllVehicles, getVehicleInfo, getRegion } from '../actions'
+
 class MapDetail extends Component {
   state = {
     status: null,
-    direction: '',
-    region: {
-      // Austin, TX
-      latitude: 30.2672,
-      longitude: -97.7431,
-      latitudeDelta: 0.2822,
-      longitudeDelta: 0.3021,
-    },
-    markers: [],
-    selectedMarker: null,
-    selectedMarkerColor: ''
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(this.props)
+    console.log(nextProps)
   }
 
   componentDidMount() {
@@ -43,86 +39,48 @@ class MapDetail extends Component {
     Location.getCurrentPositionAsync({
       enableHighAccuracy: true,
     }).then(({ coords }) => {
-      this.setState({
-        status: 'granted',
-        region: {
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-          latitudeDelta: 0.75,
-          longitudeDelta: 0.5,
-        },
-      })
-
+      this.setState({ status: 'granted' })
+      const region = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        latitudeDelta: 0.75,
+        longitudeDelta: 0.5,
+      }
       //********* TEMP FUNCTION FOR DUMMY DATA *****************//
-      if (this.state.markers.length === 0) {
-        this.mountDummyData(coords.latitude, coords.longitude)
+      const { getAllVehicles, getRegion, vehicleData } = this.props;
+      getRegion(region)
+      if (vehicleData.markers.length === 0) {
+        getAllVehicles(coords)
       }
     })
   }
 
-  //******************* DUMMY VEHICLE DATA RELATIVE TO CURRENT LOCATION, DELETE AFTER GETTING ACTUAL VEHICLE DATA ********************//
-  mountDummyData = (latitude, longitude) => {
-    const randomCoords = [];
-    const distanceFromBase = .2;
-    const markerAmount = 40;
-    const baseCoord = {
-      latitude, 
-      longitude
-    };
-
-    for (let i = 0; i < markerAmount; i++) {
-      let randomLatitude = Math.random() * ((Math.random() <= 0.5 
-        ? (baseCoord.latitude - distanceFromBase) 
-        : (baseCoord.latitude + distanceFromBase)) - baseCoord.latitude) + baseCoord.latitude;
-      let randomLongitude = Math.random() * ((Math.random() <= 0.5 
-        ? (baseCoord.longitude - distanceFromBase) 
-        : (baseCoord.longitude + distanceFromBase)) - baseCoord.longitude) + baseCoord.longitude
-      randomCoords.push({
-        latlng: {
-          latitude: randomLatitude,
-          longitude: randomLongitude
-        },
-        id: i,
-        bounty: 'Bounty rate',
-        description: 'Car model, mileage, fuel level, etc.',
-        location: 'Address of vehicle location'
-      })
+  handleOpenInfoBox = ({ id, color, coord, bounty, description, address }) => {
+    const selectedMarker = {
+      id, 
+      color: 'green', 
+      coord, 
+      bounty, 
+      description, 
+      address 
     }
 
-    this.setState({
-      markers: randomCoords
-    })
-  }
-  //*****************************************************************************************************//
-
-  watchPosition = () => {
-    Location.watchPositionAsync({
-      enableHighAccuracy: true,
-      timeInterval: 1,
-      distanceInterval: 1,
-    }, ({ coords }) => {
-      const newDirection = calculateDirection(coords.heading)
-      const { direction, bounceValue } = this.state
-
-      this.setState(() => ({
-        coords,
-        status: 'granted',
-        direction: newDirection,
-      }))
-    })
+    const { getRegion, getVehicleInfo } = this.props;
+    getRegion(coord)
+    getVehicleInfo(selectedMarker)
   }
 
-  openInfoBox = (marker) => {
-    console.log(marker)
-    this.setState({
-      selectedMarker: marker.id,
-      selectedMarkerColor: 'green'
-    })
-  }
+  // handleNavigation = (la, lo) => {
+  //   const rla = this.region.latitude;
+  //   const rlo = this.region.longitude;
+  //   const url = `http://maps.apple.com/?saddr=${rla},${rlo}&daddr=${la},${lo}&dirflg=d`;
+  //   return Linking.openURL(url);
+  // }
 
   render() {
-    const { status, direction, selectedMarker, selectedMarkerColor } = this.state
-    const { navigation } = this.props;
+    const { status } = this.state
+    const { navigation, mapData, vehicleData } = this.props
+    const { selectedMarker, markers } = vehicleData
 
     if (status === null) {
       return (
@@ -145,16 +103,18 @@ class MapDetail extends Component {
       return (
         <View style={styles.container}>
           <MapView
+            ref="map"
             style={styles.map}
-            region={this.state.region}
-            showsUserLocation={true}>
-            {this.state.markers.map((marker, i) => 
+            region={mapData.region}
+            showsUserLocation={true}
+            loadingEnabled={true}>
+            {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
-                coordinate={marker.latlng}
                 zIndex={i}
-                pinColor={i === selectedMarker ? selectedMarkerColor : 'red'}
-                onPress={() => this.openInfoBox(marker)}
+                coordinate={marker.coord}
+                pinColor={marker.id === selectedMarker.id ? selectedMarker.color : 'red'}
+                onPress={() => this.handleOpenInfoBox(marker)}
               />
             )}
           </MapView>
@@ -229,14 +189,20 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps (state, { navigation }) {
+  const { vehicleData, mapData } = state;
+  console.log(state)
   return {
-    state,
+    mapData,
+    vehicleData,
+    navigation
   }
 }
 
 function mapDispatchToProps (dispatch, { navigation }) {
   return {
-    goBack: () => navigation.goBack(),
+    getAllVehicles: (coords) => dispatch(getAllVehicles(coords)),
+    getVehicleInfo: (coords) => dispatch(getVehicleInfo(coords)),
+    getRegion: (coords) => dispatch(getRegion(coords)),
   }
 }
 

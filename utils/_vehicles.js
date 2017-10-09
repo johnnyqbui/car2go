@@ -1,38 +1,45 @@
 // Utilities for backfilling the car data
-
 import { AsyncStorage } from 'react-native'
-import { timeToString } from './helpers'
 
 export const CAR_STORAGE_KEY = ':car'
 
-function getRandomNumber (max) {
-  return Math.floor(Math.random() * max) + 0
-}
+//******************* DUMMY VEHICLE DATA RELATIVE TO CURRENT LOCATION, DELETE AFTER GETTING ACTUAL VEHICLE DATA ********************//
 
-function setDummyData () {
+const setDummyData = (coords) => {
+  const {latitude, longitude} = coords;
+  const randomCoords = [];
+  const distanceFromBase = .2;
+  const markerAmount = 40;
+  const baseCoord = {
+    latitude, 
+    longitude
+  };
 
-  let dummyData = {}
-  const timestamp = Date.now()
-
-  for (let i = -183; i < 0; i++) {
-    const time = timestamp + i * 24 * 60 * 60 * 1000
-    const strTime = timeToString(time)
-    dummyData[strTime] = getRandomNumber(3) % 2 === 0
-      ? {
-          run: getRandomNumber(run.max),
-          bike: getRandomNumber(bike.max),
-          swim: getRandomNumber(swim.max),
-          sleep: getRandomNumber(sleep.max),
-          eat: getRandomNumber(eat.max),
-        }
-      : null
+  for (let i = 0; i < markerAmount; i++) {
+    let randomLatitude = Math.random() * ((Math.random() <= 0.5 
+      ? (baseCoord.latitude - distanceFromBase) 
+      : (baseCoord.latitude + distanceFromBase)) - baseCoord.latitude) + baseCoord.latitude;
+    let randomLongitude = Math.random() * ((Math.random() <= 0.5 
+      ? (baseCoord.longitude - distanceFromBase) 
+      : (baseCoord.longitude + distanceFromBase)) - baseCoord.longitude) + baseCoord.longitude
+    randomCoords.push({
+      coord: {
+        latitude: randomLatitude,
+        longitude: randomLongitude
+      },
+      id: i,
+      bounty: 'Bounty rate',
+      description: 'Car model, mileage, fuel level, etc.',
+      address: 'Address of vehicle location'
+    })
   }
 
-  AsyncStorage.setItem(CAR_STORAGE_KEY, JSON.stringify(dummyData))
-
-  return dummyData
+  // AsyncStorage.setItem(CAR_STORAGE_KEY, JSON.stringify(randomCoords))
+  return randomCoords
 }
 
-export function formatVehicleResults (results) {
-  setDummyData()
+export const getDummyData = (coords) => {
+  return setDummyData(coords)
 }
+
+  //*****************************************************************************************************//

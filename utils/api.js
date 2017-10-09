@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native'
-import { formatVehicleResults, CAR_STORAGE_KEY } from './_calendar'
+import { formatVehicleResults, CAR_STORAGE_KEY } from './_vehicles'
 
 export function fetchCars () {
   return AsyncStorage.getItem(CAR_STORAGE_KEY)
