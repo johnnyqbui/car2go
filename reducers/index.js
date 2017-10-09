@@ -1,5 +1,9 @@
 import { combineReducers } from 'redux';
-import { GET_ALL_VEHICLES, GET_VEHICLE_INFO, GET_REGION } from '../actions'
+import { 
+  GET_ALL_VEHICLES, 
+  GET_VEHICLE_INFO, 
+  GET_REGION,
+  UPDATE_PROGRESS_BAR } from '../actions'
 
 const mapDataState = {
   region: {
@@ -59,7 +63,29 @@ const vehicleData = (state = vehicleDataState, action) => {
   }
 }
 
+const progressBarState = {
+    // Must set between 0.1 - 1
+    progressIncrements: 1,
+    progressDuration: 1500,
+    progress: 0
+}
+
+const progressBarData = (state = progressBarState, action) => {
+  const { progress } = action
+  switch (action.type) {
+    case UPDATE_PROGRESS_BAR :
+      return {
+        ...state,
+        progress
+      }
+    default :
+      return state
+  }
+}
+
+
 export default combineReducers({
 	vehicleData,
-  mapData
+  mapData,
+  progressBarData
 })

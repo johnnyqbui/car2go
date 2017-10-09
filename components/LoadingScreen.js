@@ -1,16 +1,12 @@
 import React, { Component }from "react";
+import { connect } from 'react-redux'
 import { View, Text, StyleSheet, Dimensions, Animated, Easing } from "react-native";
 import { Card, Button, FormInput } from "react-native-elements";
 import { lightGray, blue } from '../utils/colors'
 import * as Progress from 'react-native-progress';
+import { updateProgressBar } from '../actions'
 
-export default class LoadingScreen extends Component {
-  static defaultProps = {
-    // Must set between 0.1 - 1
-    progressIncrements: 1,
-    progressDuration: 1500
-  }
-
+class LoadingScreen extends Component {
   state = {
     timer: null,
     progress: 0,
@@ -21,7 +17,7 @@ export default class LoadingScreen extends Component {
     const timer = setInterval(this.progress, progressDuration);
     this.setState(state => ({
       timer,
-      progress: state.progress + progressIncrements,
+      progress: state.progress + progressIncrements
     }))
   }
 
@@ -30,13 +26,12 @@ export default class LoadingScreen extends Component {
   }
 
   progress = () => {
-    // if loading is done, then navigate to loggin screen
+    // if loading is done, map component should open
     const { progress } = this.state;
-    const { navigation, progressIncrements } = this.props;
-
-    if (progress >= 1) {
+    const { updateProgressBar, progressIncrements } = this.props;
+    if (progress > 0) {
       clearInterval(this.state.timer)
-      // navigation.navigate("LoggedIn")
+      updateProgressBar(progress)
     } else {
       this.setState(state => ({
         progress: state.progress + progressIncrements,
@@ -86,3 +81,21 @@ const styles = StyleSheet.create({
     fontSize: 24
   }
 });
+
+
+function mapStateToProps (state) {
+  const { progressBarData } = state;
+  const { progressIncrements, progressDuration } = progressBarData;
+  return {
+    progressIncrements,
+    progressDuration
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    updateProgressBar: (progress) => dispatch(updateProgressBar(progress)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoadingScreen)

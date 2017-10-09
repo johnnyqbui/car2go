@@ -3,11 +3,9 @@ import { View, Text, StyleSheet, Dimensions, Animated, TouchableHighlight, Touch
 import { AppLoading, Location, Permissions, Constants } from 'expo'
 import { Foundation, FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
-import { addEntry } from '../actions'
 import MapView from 'react-native-maps'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
-
 import { getAllVehicles, getVehicleInfo, getRegion } from '../actions'
 
 class MapDetail extends Component {
@@ -15,9 +13,9 @@ class MapDetail extends Component {
     status: null,
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props)
-    console.log(nextProps)
+  shouldComponentUpdate({ progress }) {
+    // Loading Screen
+    return progress > 0
   }
 
   componentDidMount() {
@@ -26,7 +24,6 @@ class MapDetail extends Component {
         if (status === 'granted') {
           this.setLocation()
         }
-
         this.setState(() => ({ status }))
       })
       .catch((error) => {
@@ -43,13 +40,15 @@ class MapDetail extends Component {
       const region = {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.75,
+        latitudeDelta: 0.75,color: 'green',
         longitudeDelta: 0.5,
       }
-      //********* TEMP FUNCTION FOR DUMMY DATA *****************//
-      const { getAllVehicles, getRegion, vehicleData } = this.props;
+      
+      const { getAllVehicles, getRegion, markers } = this.props;
       getRegion(region)
-      if (vehicleData.markers.length === 0) {
+
+      //********* TEMP FUNCTION FOR DUMMY DATA *****************//
+      if (markers.length === 0) {
         getAllVehicles(coords)
       }
     })
@@ -66,7 +65,12 @@ class MapDetail extends Component {
     }
 
     const { getRegion, getVehicleInfo } = this.props;
-    getRegion(coord)
+    this.refs.map.animateToRegion({
+      latitude: coord.latitude,
+      longitude: coord.longitude,
+      latitudeDelta: 0.7,
+      longitudeDelta: 0.7,
+    }, 300)
     getVehicleInfo(selectedMarker)
   }
 
@@ -79,8 +83,7 @@ class MapDetail extends Component {
 
   render() {
     const { status } = this.state
-    const { navigation, mapData, vehicleData } = this.props
-    const { selectedMarker, markers } = vehicleData
+    const { navigation, region, selectedMarker, markers } = this.props
 
     if (status === null) {
       return (
@@ -105,7 +108,7 @@ class MapDetail extends Component {
           <MapView
             ref="map"
             style={styles.map}
-            region={mapData.region}
+            initialRegion={region}
             showsUserLocation={true}
             loadingEnabled={true}>
             {markers.map((marker, i) => 
@@ -189,11 +192,13 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps (state, { navigation }) {
-  const { vehicleData, mapData } = state;
-  console.log(state)
+  const { vehicleData, mapData, progressBarData } = state;
+  const { selectedMarker, markers } = vehicleData
   return {
-    mapData,
-    vehicleData,
+    region: mapData.region,
+    progress: progressBarData.progress,
+    markers,
+    selectedMarker,
     navigation
   }
 }
