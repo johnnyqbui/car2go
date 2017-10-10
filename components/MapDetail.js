@@ -7,10 +7,12 @@ import MapView from 'react-native-maps'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
 import { getAllVehicles, getVehicleInfo, getRegion } from '../actions'
+import InfoBox from './InfoBox'
 
 class MapDetail extends Component {
   state = {
     status: null,
+    toggleInfoBox: false
   }
 
   shouldComponentUpdate({ progress }) {
@@ -33,6 +35,7 @@ class MapDetail extends Component {
   }
 
   setLocation = () => {
+    const { getAllVehicles, getRegion, markers } = this.props;
     Location.getCurrentPositionAsync({
       enableHighAccuracy: true,
     }).then(({ coords }) => {
@@ -40,11 +43,10 @@ class MapDetail extends Component {
       const region = {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.75,color: 'green',
+        latitudeDelta: 0.75,
         longitudeDelta: 0.5,
       }
       
-      const { getAllVehicles, getRegion, markers } = this.props;
       getRegion(region)
 
       //********* TEMP FUNCTION FOR DUMMY DATA *****************//
@@ -54,7 +56,13 @@ class MapDetail extends Component {
     })
   }
 
-  handleOpenInfoBox = ({ id, color, coord, bounty, description, address }) => {
+  centerCurrentLocation = () => {
+    const { region } = this.props;
+    this.refs.map.animateToRegion(region, 300)
+  }
+
+  openInfoBox = ({ id, color, coord, bounty, description, address }) => {
+    const { getVehicleInfo } = this.props;
     const selectedMarker = {
       id, 
       color: 'green', 
@@ -64,25 +72,39 @@ class MapDetail extends Component {
       address 
     }
 
-    const { getRegion, getVehicleInfo } = this.props;
     this.refs.map.animateToRegion({
       latitude: coord.latitude,
       longitude: coord.longitude,
-      latitudeDelta: 0.7,
-      longitudeDelta: 0.7,
+      latitudeDelta: .25,
+      longitudeDelta: .25,
     }, 300)
+
     getVehicleInfo(selectedMarker)
+
+    this.setState({
+      toggleInfoBox: true
+    })
   }
 
-  // handleNavigation = (la, lo) => {
-  //   const rla = this.region.latitude;
-  //   const rlo = this.region.longitude;
-  //   const url = `http://maps.apple.com/?saddr=${rla},${rlo}&daddr=${la},${lo}&dirflg=d`;
-  //   return Linking.openURL(url);
-  // }
+  closeInfoBox = () => {
+    const { getVehicleInfo } = this.props;
+    const selectedMarker = {
+      id: null,
+      color: '',
+      coord: {},
+      bounty: '',
+      description: '', 
+      address: ''
+    }
+    getVehicleInfo(selectedMarker)
+
+    this.setState({
+      toggleInfoBox: false
+    })
+  }
 
   render() {
-    const { status } = this.state
+    const { status, toggleInfoBox } = this.state
     const { navigation, region, selectedMarker, markers } = this.props
 
     if (status === null) {
@@ -110,25 +132,28 @@ class MapDetail extends Component {
             style={styles.map}
             initialRegion={region}
             showsUserLocation={true}
-            loadingEnabled={true}>
+            loadingEnabled={true}
+            onPress={() => this.closeInfoBox()}>
             {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
                 zIndex={i}
                 coordinate={marker.coord}
                 pinColor={marker.id === selectedMarker.id ? selectedMarker.color : 'red'}
-                onPress={() => this.handleOpenInfoBox(marker)}
+                onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}
               />
             )}
           </MapView>
 
           <TouchableHighlight
-            ref="location"
             style={[styles.button, styles.getLocationButton]}
-            onPress={this.setLocation}
+            onPress={this.centerCurrentLocation}
             underlayColor='grey'>
             <MaterialIcons name="my-location" size={30} color='black'/>
           </TouchableHighlight>
+          <View style={styles.infoBoxContainer}>
+            <InfoBox />
+          </View>
         </View>
       )
     }
@@ -188,10 +213,16 @@ const styles = StyleSheet.create({
     height: height,
     width: width
   },
+  infoBoxContainer: {
+    zIndex: 6,
+    position: 'absolute',
+    left: 0,
+    bottom: 0
+  }
 });
 
 
-function mapStateToProps (state, { navigation }) {
+const mapStateToProps = (state, { navigation }) => {
   const { vehicleData, mapData, progressBarData } = state;
   const { selectedMarker, markers } = vehicleData
   return {
@@ -203,7 +234,7 @@ function mapStateToProps (state, { navigation }) {
   }
 }
 
-function mapDispatchToProps (dispatch, { navigation }) {
+const mapDispatchToProps = (dispatch, { navigation }) => {
   return {
     getAllVehicles: (coords) => dispatch(getAllVehicles(coords)),
     getVehicleInfo: (coords) => dispatch(getVehicleInfo(coords)),

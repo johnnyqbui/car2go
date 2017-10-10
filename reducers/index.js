@@ -40,7 +40,7 @@ const vehicleDataState = {
     color: '',
     coord: {},
     bounty: '',
-    description: '',
+    description: '', 
     address: ''
   },
 }

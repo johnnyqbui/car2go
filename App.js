@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import reducer from './reducers'
 import { View, StatusBar } from 'react-native';
 import { Constants } from 'expo'
 import { createRootNavigator } from "./router";
 import { isLoggedIn } from "./auth/_auth";
 import { darkBlue } from './utils/colors'
+import reducer from './reducers'
 
 const C2GStatusBar = ({backgroundColor, ...props}) => {
   return (
