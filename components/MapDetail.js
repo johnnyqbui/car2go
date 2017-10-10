@@ -216,8 +216,11 @@ const styles = StyleSheet.create({
   infoBoxContainer: {
     zIndex: 6,
     position: 'absolute',
+    alignItems: 'center',
+    right: 0,
     left: 0,
-    bottom: 0
+    bottom: 0,
+    width: width
   }
 });
 

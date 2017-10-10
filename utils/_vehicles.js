@@ -30,7 +30,7 @@ const setDummyData = (coords) => {
       id: i,
       bounty: `$${(randomLatitude/2+4).toFixed(2)}`,
       description: 'Car model, mileage, fuel level, etc.',
-      address: '3704 Kerbey Ln, Austin, TX 78731' // RANDOM AUSTIN ADDRESS
+      address: 'reverse geolocate from coords?'
     })
   }
 

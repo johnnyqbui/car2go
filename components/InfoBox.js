@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Button } from 'react-native-elements'
-import { View, Text, StyleSheet, TouchableOpacity, Linking, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Platform, Linking, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { blue } from '../utils/colors'
 
@@ -12,7 +12,9 @@ const InfoBox = (props) => {
     const { latitude, longitude } = selectedMarker.coord;
     const rla = region.latitude;
     const rlo = region.longitude;
-    const url = `http://maps.google.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`;
+    const url = Platform.OS === 'ios'
+    ? `http://maps.apple.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
+    : `http://maps.google.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
     if ( latitude ) {
       return Linking.openURL(url);
     }
@@ -38,10 +40,10 @@ const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     margin: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    padding: 20,
     backgroundColor: 'white',
-    borderRadius: 5
+    borderRadius: 10,
+    width: width/1.2
   },
   button: {
     margin: 10
