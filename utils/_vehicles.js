@@ -30,7 +30,8 @@ const setDummyData = (coords) => {
       id: i,
       bounty: `$${(randomLatitude/2+4).toFixed(2)}`,
       description: 'Car model, mileage, fuel level, etc.',
-      address: 'reverse geolocate from coords?'
+      address: 'reverse geolocate from coords?',
+      destination: 'deliver to'
     })
   }
 

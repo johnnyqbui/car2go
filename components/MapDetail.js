@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import MapView from 'react-native-maps'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
-import { getAllVehicles, getVehicleInfo, getRegion } from '../actions'
+import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
 import InfoBox from './InfoBox'
 
 class MapDetail extends Component {
@@ -35,7 +35,7 @@ class MapDetail extends Component {
   }
 
   setLocation = () => {
-    const { getAllVehicles, getRegion, markers } = this.props;
+    const { getAllVehicles, getCurrentLocation, markers } = this.props;
     Location.getCurrentPositionAsync({
       enableHighAccuracy: true,
     }).then(({ coords }) => {
@@ -43,11 +43,11 @@ class MapDetail extends Component {
       const region = {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.75,
+        latitudeDelta: 0.5,
         longitudeDelta: 0.5,
       }
       
-      getRegion(region)
+      getCurrentLocation(region)
 
       //********* TEMP FUNCTION FOR DUMMY DATA *****************//
       if (markers.length === 0) {
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
   getLocationButton: {
     zIndex: 3,
-    bottom: 0,
+    top: 75,
     right: 0,
     margin: 20,
     paddingHorizontal: 10,
@@ -220,7 +220,6 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    width: width
   }
 });
 
@@ -241,7 +240,7 @@ const mapDispatchToProps = (dispatch, { navigation }) => {
   return {
     getAllVehicles: (coords) => dispatch(getAllVehicles(coords)),
     getVehicleInfo: (coords) => dispatch(getVehicleInfo(coords)),
-    getRegion: (coords) => dispatch(getRegion(coords)),
+    getCurrentLocation: (coords) => dispatch(getCurrentLocation(coords)),
   }
 }
 

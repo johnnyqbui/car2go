@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 });
 
 
-function mapStateToProps (state) {
+const mapStateToProps = (state) => {
   const { progressBarData } = state;
   const { progressIncrements, progressDuration } = progressBarData;
   return {
@@ -92,10 +92,13 @@ function mapStateToProps (state) {
   }
 }
 
-function mapDispatchToProps (dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     updateProgressBar: (progress) => dispatch(updateProgressBar(progress)),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoadingScreen)
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(LoadingScreen)

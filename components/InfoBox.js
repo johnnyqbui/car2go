@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import { Button } from 'react-native-elements'
 import { View, Text, StyleSheet, Platform, Linking, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
-import { blue } from '../utils/colors'
+import { blue, alertRed } from '../utils/colors'
+import { toggleMission } from '../actions'
 
 const InfoBox = (props) => {
-  const { selectedMarker, region } = props
+  const { selectedMarker, region, toggleMission } = props
 
   const handleDirections = () => {
     const { latitude, longitude } = selectedMarker.coord;
@@ -15,23 +16,36 @@ const InfoBox = (props) => {
     const url = Platform.OS === 'ios'
     ? `http://maps.apple.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
     : `http://maps.google.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
-    if ( latitude ) {
-      return Linking.openURL(url);
-    }
+    if ( latitude ) { return Linking.openURL(url) }
   }
 
+  const handletoggleMission = () => {
+    if (selectedMarker.id) {
+      toggleMission(selectedMarker)
+    } 
+  }
+  
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Bounty Rate: {selectedMarker.bounty}</Text>
       <Text style={styles.text}>Description: {selectedMarker.description}</Text>
       <Text style={styles.text}>Address: {selectedMarker.address}</Text>
-      <Button
-        icon={{name: 'directions'}}
-        title='Directions' 
-        backgroundColor={blue}
-        buttonStyle={styles.button}
-        onPress={handleDirections}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          icon={{name: 'flag', type: 'entypo', size: 26 }}
+          title={selectedMarker.acceptMission ? 'Abandon' : 'Accept'} 
+          backgroundColor={selectedMarker.acceptMission ? alertRed : blue}
+          buttonStyle={styles.button}
+          onPress={handletoggleMission}
+        />
+        <Button
+          icon={{name: 'directions', size: 26 }}
+          title='Directions' 
+          backgroundColor={blue}
+          buttonStyle={styles.button}
+          onPress={handleDirections}
+        />
+      </View>
     </View>
   )
 }
@@ -45,8 +59,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: width/1.2
   },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
   button: {
-    margin: 10
+    margin: 10,
   },
   text: {
     alignItems: 'center',
@@ -65,9 +84,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, { navigation }) => {
   return {
-    getAllVehicles: (coords) => dispatch(getAllVehicles(coords)),
-    getVehicleInfo: (coords) => dispatch(getVehicleInfo(coords)),
-    getRegion: (coords) => dispatch(getRegion(coords)),
+    toggleMission: (selectedMarker) => dispatch(toggleMission(selectedMarker)),
   }
 }
 

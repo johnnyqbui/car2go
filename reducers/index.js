@@ -2,8 +2,9 @@ import { combineReducers } from 'redux';
 import { 
   GET_ALL_VEHICLES, 
   GET_VEHICLE_INFO, 
-  GET_REGION,
-  UPDATE_PROGRESS_BAR } from '../actions'
+  GET_CURRENT_LOCATION,
+  UPDATE_PROGRESS_BAR,
+  TOGGLE_MISSION } from '../actions'
 
 const mapDataState = {
   region: {
@@ -18,7 +19,7 @@ const mapDataState = {
 const mapData = (state = mapDataState, action) => {
   const { coords } = action
   switch (action.type) {
-    case GET_REGION :
+    case GET_CURRENT_LOCATION :
       return {
         ...state,
         region: {
@@ -41,7 +42,8 @@ const vehicleDataState = {
     coord: {},
     bounty: '',
     description: '', 
-    address: ''
+    address: '',
+    acceptMission: false
   },
 }
 
@@ -57,6 +59,14 @@ const vehicleData = (state = vehicleDataState, action) => {
       return {
         ...state,
         selectedMarker
+      }
+    case TOGGLE_MISSION :
+      return {
+        ...state,
+        ['selectedMarker']: {
+          ...state['selectedMarker'],
+          acceptMission: !state.selectedMarker.acceptMission
+        }
       }
     default :
       return state
