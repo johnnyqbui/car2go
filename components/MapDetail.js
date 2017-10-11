@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Animated, TouchableHighlight, Touch
 import { AppLoading, Location, Permissions, Constants } from 'expo'
 import { Foundation, FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
-import MapView from 'react-native-maps'
+import MapView, { Circle } from 'react-native-maps'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
 import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
@@ -105,8 +105,8 @@ class MapDetail extends Component {
 
   render() {
     const { status, toggleInfoBox } = this.state
-    const { navigation, region, selectedMarker, markers } = this.props
-
+    const { navigation, region, selectedMarker, markers, randomDestination } = this.props
+    console.log(selectedMarker.acceptedMission, randomDestination)
     if (status === null) {
       return (
         <LoadingScreen />
@@ -143,6 +143,13 @@ class MapDetail extends Component {
                 onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}
               />
             )}
+            {selectedMarker.acceptMission && randomDestination.latitude && 
+                <Circle center={randomDestination} 
+                  radius={1000}
+                  strokeColor={blue}
+                  fillColor={'rgba(65, 80, 191, .4)'}/>
+            }
+            
           </MapView>
 
           <TouchableHighlight
@@ -226,13 +233,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, { navigation }) => {
   const { vehicleData, mapData, progressBarData } = state;
-  const { selectedMarker, markers } = vehicleData
+  const { selectedMarker, markers, toggleMission, randomDestination } = vehicleData;
   return {
     region: mapData.region,
     progress: progressBarData.progress,
     markers,
     selectedMarker,
-    navigation
+    navigation,
+    randomDestination
   }
 }
 

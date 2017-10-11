@@ -4,7 +4,8 @@ import {
   GET_VEHICLE_INFO, 
   GET_CURRENT_LOCATION,
   UPDATE_PROGRESS_BAR,
-  TOGGLE_MISSION } from '../actions'
+  TOGGLE_MISSION,
+  GET_DESTINATION } from '../actions'
 
 const mapDataState = {
   region: {
@@ -45,10 +46,15 @@ const vehicleDataState = {
     address: '',
     acceptMission: false
   },
+  randomDestination: {
+    latitude: null,
+    longitude: null
+  }
 }
 
 const vehicleData = (state = vehicleDataState, action) => {
-  const { allVehicles, selectedMarker } = action
+  const { allVehicles, selectedMarker, randomDestination } = action
+
   switch (action.type) {
     case GET_ALL_VEHICLES :
       return {
@@ -66,7 +72,12 @@ const vehicleData = (state = vehicleDataState, action) => {
         ['selectedMarker']: {
           ...state['selectedMarker'],
           acceptMission: !state.selectedMarker.acceptMission
-        }
+        },
+      }
+    case GET_DESTINATION :
+      return {
+        ...state,
+        randomDestination
       }
     default :
       return state

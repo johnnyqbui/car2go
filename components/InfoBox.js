@@ -4,10 +4,10 @@ import { Button } from 'react-native-elements'
 import { View, Text, StyleSheet, Platform, Linking, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { blue, alertRed } from '../utils/colors'
-import { toggleMission } from '../actions'
+import { toggleMission, getDestination } from '../actions'
 
 const InfoBox = (props) => {
-  const { selectedMarker, region, toggleMission } = props
+  const { selectedMarker, region, toggleMission, getDestination } = props
 
   const handleDirections = () => {
     const { latitude, longitude } = selectedMarker.coord;
@@ -22,9 +22,10 @@ const InfoBox = (props) => {
   const handletoggleMission = () => {
     if (selectedMarker.id) {
       toggleMission(selectedMarker)
+      getDestination(region)
     } 
   }
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Bounty Rate: {selectedMarker.bounty}</Text>
@@ -85,6 +86,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch, { navigation }) => {
   return {
     toggleMission: (selectedMarker) => dispatch(toggleMission(selectedMarker)),
+    getDestination: (region) => dispatch(getDestination(region)),
   }
 }
 
