@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import MapView, { Circle } from 'react-native-maps'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
-import { getAllVehicles, getVehicleInfo, getCurrentLocation, getDestination, clearDestination } from '../actions'
+import { getAllInitialVehicles, getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
 import InfoBox from './InfoBox'
 
 class Map extends Component {
@@ -35,7 +35,7 @@ class Map extends Component {
   }
 
   setLocation = () => {
-    const { getAllVehicles, getCurrentLocation, markers } = this.props;
+    const { getAllInitialVehicles, getCurrentLocation, markers } = this.props;
     Location.getCurrentPositionAsync({
       enableHighAccuracy: true,
     }).then(({ coords }) => {
@@ -51,7 +51,7 @@ class Map extends Component {
 
       //********* TEMP FUNCTION FOR DUMMY DATA *****************//
       if (markers.length === 0) {
-        getAllVehicles(coords)
+        getAllInitialVehicles(coords)
       }
     })
   }
@@ -63,7 +63,7 @@ class Map extends Component {
 
   openInfoBox = ({ id, color, coord, bounty, description, address, destination }) => {
     const { toggleInfoBox } = this.state
-    const { getVehicleInfo, clearDestination } = this.props;
+    const { getVehicleInfo } = this.props;
     const selectedMarker = {
       id, 
       color: 'green', 
@@ -74,12 +74,10 @@ class Map extends Component {
       destination
     }
 
-    this.refs.map.animateToRegion({
-      latitude: coord.latitude,
-      longitude: coord.longitude,
-      latitudeDelta: .25,
-      longitudeDelta: .25,
-    }, 300)
+    this.refs.map.fitToCoordinates([coord, destination], {
+       edgePadding: { top: 150, right: 50, bottom: 50, left: 50 },
+       animated: true,
+    })
 
     getVehicleInfo(selectedMarker)
 
@@ -90,7 +88,7 @@ class Map extends Component {
   }
 
   closeInfoBox = () => {
-    const { getVehicleInfo } = this.props;
+    const { getAllVehicles, getVehicleInfo, initialMarkers } = this.props;
     const selectedMarker = {
       id: null,
       color: '',
@@ -100,7 +98,8 @@ class Map extends Component {
       address: '',
       destination: {}
     }
-    
+
+    getAllVehicles(initialMarkers)
     getVehicleInfo(selectedMarker)
 
     this.setState({
@@ -112,7 +111,6 @@ class Map extends Component {
     const { status, toggleInfoBox } = this.state
     const { navigation, region, selectedMarker, markers } = this.props
 
-    console.log(selectedMarker.destination)
     if (status === null) {
       return (
         <LoadingScreen />
@@ -241,11 +239,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, { navigation }) => {
   const { vehicleData, mapData, progressBarData } = state;
-  const { selectedMarker, markers, toggleMission } = vehicleData;
-  console.log(selectedMarker.destination)
+  const { selectedMarker, markers, initialMarkers } = vehicleData;
   return {
     region: mapData.region,
     progress: progressBarData.progress,
+    initialMarkers,
     markers,
     selectedMarker,
     navigation,
@@ -254,11 +252,10 @@ const mapStateToProps = (state, { navigation }) => {
 
 const mapDispatchToProps = (dispatch, { navigation }) => {
   return {
-    getAllVehicles: (coords) => dispatch(getAllVehicles(coords)),
+    getAllInitialVehicles: (coords) => dispatch(getAllInitialVehicles(coords)),
+    getAllVehicles: (initialMarkers) => dispatch(getAllVehicles(initialMarkers)),
     getVehicleInfo: (coords) => dispatch(getVehicleInfo(coords)),
     getCurrentLocation: (coords) => dispatch(getCurrentLocation(coords)),
-    getDestination: (region) => dispatch(getDestination(region)),
-    clearDestination: () => dispatch(clearDestination())
   }
 }
 

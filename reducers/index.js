@@ -4,8 +4,7 @@ import {
   GET_VEHICLE_INFO, 
   GET_CURRENT_LOCATION,
   UPDATE_PROGRESS_BAR,
-  TOGGLE_MISSION,
-  CLEAR_DESTINATION } from '../actions'
+  TOGGLE_MISSION } from '../actions'
 
 const mapDataState = {
   region: {
@@ -36,6 +35,7 @@ const mapData = (state = mapDataState, action) => {
 }
 
 const vehicleDataState = {
+  initialMarkers: [],
   markers: [],
   selectedMarker: {
     id: null,
@@ -59,6 +59,7 @@ const vehicleData = (state = vehicleDataState, action) => {
     case GET_ALL_VEHICLES :
       return {
         ...state,
+        initialMarkers: allVehicles,
         markers: allVehicles
       }
     case GET_VEHICLE_INFO :
@@ -73,14 +74,6 @@ const vehicleData = (state = vehicleDataState, action) => {
           ...state['selectedMarker'],
           acceptMission: !state.selectedMarker.acceptMission
         },
-      }
-    case CLEAR_DESTINATION :
-      return {
-        ...state,
-        ['selectedMarker']: {
-          ...state['selectedMarker'],
-          destination: {}
-        }
       }
     default :
       return state
@@ -111,5 +104,5 @@ const progressBarData = (state = progressBarState, action) => {
 export default combineReducers({
 	vehicleData,
   mapData,
-  progressBarData
+  progressBarData,
 })

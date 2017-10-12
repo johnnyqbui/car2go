@@ -43,15 +43,13 @@ const handleDirectionsToDestination = () => {
 
       <View style={styles.buttonContainer}>
         <Button
-          icon={{name: 'flag', type: 'entypo', size: 26 }}
           title={selectedMarker.acceptMission ? 'Abandon' : 'Unlock and Start'} 
           backgroundColor={selectedMarker.acceptMission ? alertRed : blue}
           buttonStyle={styles.button}
           onPress={handletoggleMission}
         />
         <Button
-          icon={{name: 'directions', size: 26 }}
-          title='Directions' 
+          title='Route' 
           backgroundColor={blue}
           buttonStyle={styles.button}
           onPress={handleDirectionsToCar}
@@ -89,7 +87,7 @@ const mapStateToProps = (state) => {
   const { region } = state.mapData;
   return {
     selectedMarker,
-    region
+    region,
   }
 }
 

@@ -6,10 +6,16 @@ export const GET_VEHICLE_INFO = 'GET_VEHICLE_INFO'
 export const GET_CURRENT_LOCATION = 'GET_CURRENT_LOCATION'
 export const UPDATE_PROGRESS_BAR = 'UPDATE_PROGRESS_BAR'
 export const TOGGLE_MISSION = 'TOGGLE_MISSION'
-export const CLEAR_DESTINATION = 'CLEAR_DESTINATION'
 
-export const getAllVehicles = (coords) => {
+export const getAllInitialVehicles = (coords) => {
 	const allVehicles = getDummyData(coords)
+  return {
+    type: GET_ALL_VEHICLES,
+    allVehicles,
+  }
+}
+
+export const getAllVehicles = (allVehicles) => {
   return {
     type: GET_ALL_VEHICLES,
     allVehicles,
@@ -41,11 +47,5 @@ export const toggleMission = (selectedMarker) => {
 	return {
 		type: TOGGLE_MISSION,
 		selectedMarker
-	}
-}
-
-export const clearDestination = () => {
-	return {
-		type: CLEAR_DESTINATION,
 	}
 }
