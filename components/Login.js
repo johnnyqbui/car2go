@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Card, Button, FormInput } from "react-native-elements";
 import { onLogIn } from "../auth/_auth";
-import { darkBlue, blue } from '../utils/colors'
+import { darkBlue, blue, lightGray } from '../utils/colors'
 
 export default ({ navigation }) => (
   <View style={ styles.container }>
@@ -14,7 +14,7 @@ export default ({ navigation }) => (
     	containerStyle={ styles.inputContainer }
     	inputStyle={ styles.input } 
     	placeholder="Car2Go Login" 
-    	placeholderTextColor="white"
+    	placeholderTextColor={lightGray}
     />
 
     <FormInput 
@@ -22,7 +22,7 @@ export default ({ navigation }) => (
 	    inputStyle={ styles.input } 
 	    secureTextEntry 
 	    placeholder="Password" 
-	    placeholderTextColor="white"
+	    placeholderTextColor={lightGray}
     />
 
     <Button
@@ -30,6 +30,7 @@ export default ({ navigation }) => (
       buttonStyle={ styles.button }
       backgroundColor= { blue }
       title="Sign In with Car2Go"
+      fontSize={20}
       onPress={() => {
         onLogIn().then(() => navigation.navigate("LoggedIn"));
       }}
@@ -42,30 +43,30 @@ const { height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: darkBlue,
+    backgroundColor: 'white',
   },
   titleContainer: {
-  	height: height/5,
+    marginTop: 120,
+    marginBottom: 20,
   	justifyContent: 'center',
   	alignItems: 'center'
   },
   title: {
-  	color: 'white',
-  	fontSize: 36,
+  	color: 'black',
+  	fontSize: 38,
   	fontWeight: 'bold'
   },
   inputContainer: {
   	marginVertical: 10
   },
   input: {
-  	color: 'white',
+  	color: lightGray,
   },
   buttonContainer: {
-  	alignItems: 'center',
+    flex: 1,
   },
   button: {
-  	marginTop: 100,
-  	borderRadius: 10,
-  	paddingHorizontal: 20
+  	marginTop: 10,
+  	paddingHorizontal: 20,
   }
 });

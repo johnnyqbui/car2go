@@ -9,7 +9,17 @@ import { toggleMission, getDestination } from '../actions'
 const InfoBox = (props) => {
   const { selectedMarker, region, toggleMission, getDestination } = props
 
-  const handleDirections = () => {
+  const handleDirectionsToCar = () => {
+    const { latitude, longitude } = selectedMarker.coord;
+    const rla = region.latitude;
+    const rlo = region.longitude;
+    const url = Platform.OS === 'ios'
+    ? `http://maps.apple.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
+    : `http://maps.google.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
+    if ( latitude ) { return Linking.openURL(url) }
+  }
+
+const handleDirectionsToDestination = () => {
     const { latitude, longitude } = selectedMarker.coord;
     const rla = region.latitude;
     const rlo = region.longitude;
@@ -22,19 +32,19 @@ const InfoBox = (props) => {
   const handletoggleMission = () => {
     if (selectedMarker.id) {
       toggleMission(selectedMarker)
-      getDestination(region)
     } 
   }
-
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Bounty Rate: {selectedMarker.bounty}</Text>
       <Text style={styles.text}>Description: {selectedMarker.description}</Text>
       <Text style={styles.text}>Address: {selectedMarker.address}</Text>
+      <Text style={styles.text}>Destination: {selectedMarker.destination.latitude}, {selectedMarker.destination.longitude}</Text>
+
       <View style={styles.buttonContainer}>
         <Button
           icon={{name: 'flag', type: 'entypo', size: 26 }}
-          title={selectedMarker.acceptMission ? 'Abandon' : 'Accept'} 
+          title={selectedMarker.acceptMission ? 'Abandon' : 'Unlock and Start'} 
           backgroundColor={selectedMarker.acceptMission ? alertRed : blue}
           buttonStyle={styles.button}
           onPress={handletoggleMission}
@@ -44,7 +54,7 @@ const InfoBox = (props) => {
           title='Directions' 
           backgroundColor={blue}
           buttonStyle={styles.button}
-          onPress={handleDirections}
+          onPress={handleDirectionsToCar}
         />
       </View>
     </View>
@@ -86,7 +96,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch, { navigation }) => {
   return {
     toggleMission: (selectedMarker) => dispatch(toggleMission(selectedMarker)),
-    getDestination: (region) => dispatch(getDestination(region)),
   }
 }
 

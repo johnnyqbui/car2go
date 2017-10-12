@@ -1,6 +1,6 @@
 const setFakeDestination = (coords) => {
   const {latitude, longitude} = coords;
-  const distanceFromBase = .4;
+  const distanceFromBase = .2;
   const baseCoord = {
     latitude, 
     longitude

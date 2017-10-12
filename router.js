@@ -6,7 +6,7 @@ import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 import LoadingScreen from "./components/LoadingScreen";
 import Login from "./components/Login";
 import DashBoard from "./components/DashBoard";
-import MapDetail from "./components/MapDetail";
+import Map from "./components/Map";
 import Earnings from "./components/Earnings";
 import Profile from "./components/Profile";
 import { white, cyan } from './utils/colors'
@@ -14,8 +14,8 @@ import { white, cyan } from './utils/colors'
 // Place all routes for different screens
 
 export const LoggedIn = TabNavigator({
-  MapDetail: {
-    screen: MapDetail,
+  Map: {
+    screen: Map,
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => 

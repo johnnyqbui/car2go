@@ -6,13 +6,13 @@ import { connect } from 'react-redux'
 import MapView, { Circle } from 'react-native-maps'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
-import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
+import { getAllVehicles, getVehicleInfo, getCurrentLocation, getDestination, clearDestination } from '../actions'
 import InfoBox from './InfoBox'
 
-class MapDetail extends Component {
+class Map extends Component {
   state = {
     status: null,
-    toggleInfoBox: false
+    toggleInfoBox: false,
   }
 
   shouldComponentUpdate({ progress }) {
@@ -61,15 +61,17 @@ class MapDetail extends Component {
     this.refs.map.animateToRegion(region, 300)
   }
 
-  openInfoBox = ({ id, color, coord, bounty, description, address }) => {
-    const { getVehicleInfo } = this.props;
+  openInfoBox = ({ id, color, coord, bounty, description, address, destination }) => {
+    const { toggleInfoBox } = this.state
+    const { getVehicleInfo, clearDestination } = this.props;
     const selectedMarker = {
       id, 
       color: 'green', 
       coord, 
       bounty, 
       description, 
-      address 
+      address, 
+      destination
     }
 
     this.refs.map.animateToRegion({
@@ -84,6 +86,7 @@ class MapDetail extends Component {
     this.setState({
       toggleInfoBox: true
     })
+
   }
 
   closeInfoBox = () => {
@@ -94,8 +97,10 @@ class MapDetail extends Component {
       coord: {},
       bounty: '',
       description: '', 
-      address: ''
+      address: '',
+      destination: {}
     }
+    
     getVehicleInfo(selectedMarker)
 
     this.setState({
@@ -105,8 +110,9 @@ class MapDetail extends Component {
 
   render() {
     const { status, toggleInfoBox } = this.state
-    const { navigation, region, selectedMarker, markers, randomDestination } = this.props
-    console.log(selectedMarker.acceptedMission, randomDestination)
+    const { navigation, region, selectedMarker, markers } = this.props
+
+    console.log(selectedMarker.destination)
     if (status === null) {
       return (
         <LoadingScreen />
@@ -143,11 +149,13 @@ class MapDetail extends Component {
                 onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}
               />
             )}
-            {selectedMarker.acceptMission && randomDestination.latitude && 
-                <Circle center={randomDestination} 
-                  radius={1000}
-                  strokeColor={blue}
-                  fillColor={'rgba(65, 80, 191, .4)'}/>
+            {selectedMarker.destination.latitude &&
+              <Circle 
+                key={selectedMarker.destination.latitude + selectedMarker.destination.longitude}
+                center={selectedMarker.destination} 
+                radius={1000}
+                strokeColor={blue}
+                fillColor={'rgba(65, 80, 191, .4)'}/>
             }
             
           </MapView>
@@ -233,14 +241,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, { navigation }) => {
   const { vehicleData, mapData, progressBarData } = state;
-  const { selectedMarker, markers, toggleMission, randomDestination } = vehicleData;
+  const { selectedMarker, markers, toggleMission } = vehicleData;
+  console.log(selectedMarker.destination)
   return {
     region: mapData.region,
     progress: progressBarData.progress,
     markers,
     selectedMarker,
     navigation,
-    randomDestination
   }
 }
 
@@ -249,10 +257,12 @@ const mapDispatchToProps = (dispatch, { navigation }) => {
     getAllVehicles: (coords) => dispatch(getAllVehicles(coords)),
     getVehicleInfo: (coords) => dispatch(getVehicleInfo(coords)),
     getCurrentLocation: (coords) => dispatch(getCurrentLocation(coords)),
+    getDestination: (region) => dispatch(getDestination(region)),
+    clearDestination: () => dispatch(clearDestination())
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MapDetail)
+)(Map)

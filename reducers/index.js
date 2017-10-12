@@ -5,7 +5,7 @@ import {
   GET_CURRENT_LOCATION,
   UPDATE_PROGRESS_BAR,
   TOGGLE_MISSION,
-  GET_DESTINATION } from '../actions'
+  CLEAR_DESTINATION } from '../actions'
 
 const mapDataState = {
   region: {
@@ -44,16 +44,16 @@ const vehicleDataState = {
     bounty: '',
     description: '', 
     address: '',
+    destination: {
+      latitude: null,
+      longitude: null
+    },
     acceptMission: false
   },
-  randomDestination: {
-    latitude: null,
-    longitude: null
-  }
 }
 
 const vehicleData = (state = vehicleDataState, action) => {
-  const { allVehicles, selectedMarker, randomDestination } = action
+  const { allVehicles, selectedMarker, clearDestination } = action
 
   switch (action.type) {
     case GET_ALL_VEHICLES :
@@ -74,10 +74,13 @@ const vehicleData = (state = vehicleDataState, action) => {
           acceptMission: !state.selectedMarker.acceptMission
         },
       }
-    case GET_DESTINATION :
+    case CLEAR_DESTINATION :
       return {
         ...state,
-        randomDestination
+        ['selectedMarker']: {
+          ...state['selectedMarker'],
+          destination: {}
+        }
       }
     default :
       return state
