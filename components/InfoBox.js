@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Button } from 'react-native-elements'
 import { View, Text, StyleSheet, Platform, Linking, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
-import { blue, alertRed } from '../utils/colors'
+import { gray, blue, alertRed } from '../utils/colors'
 import { toggleMission } from '../actions'
 
 const InfoBox = (props) => {
@@ -35,6 +35,10 @@ const handleDirectionsToDestination = () => {
     } 
   }
 
+  const handleBack = () => {
+
+  }
+
   const roundDestLat = selectedMarker.destination.latitude 
   ? selectedMarker.destination.latitude.toFixed(4) : ''
   const roundDestLng = selectedMarker.destination.longitude 
@@ -55,10 +59,16 @@ const handleDirectionsToDestination = () => {
       <Text style={styles.text}>Destination: {roundDestLat}, {roundDestLng}</Text>
 
       <View style={styles.buttonContainer}>
+        <Button
+          title={'Back'} 
+          backgroundColor={gray}
+          buttonStyle={styles.button}
+          onPress={handleBack}
+        />
       {
-        // If your location is next to the car then you are able to unlcok it and route to the destination
-        // otherwise you can route to where the car is
-        // I've set one fake vehicle location to your location to test, so click on the marker that is in your location
+        // If your location is right next to the car then you are able to unlock it and route to the destination
+        // otherwise the option to route to where the car is is shown
+        // I've set one fake vehicle location at your location to test, click on the marker that is in your location
         roundCoordLat === roundRegionLat
         ? <Button
           title={selectedMarker.acceptMission ? 'Abandon' : 'Unlock and Start'} 
@@ -81,11 +91,10 @@ const handleDirectionsToDestination = () => {
 const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
-    width: width/1.2
+    width: width
   },
   buttonContainer: {
     flex: 1,
@@ -93,7 +102,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   button: {
-    margin: 10,
+    marginTop: 15,
+    paddingHorizontal: 20
   },
   text: {
     alignItems: 'center',

@@ -9,7 +9,7 @@ import DashBoard from "./components/DashBoard";
 import Map from "./components/Map";
 import Earnings from "./components/Earnings";
 import Profile from "./components/Profile";
-import { white, cyan } from './utils/colors'
+import { darkBlue, blue, nonActiveTint } from './utils/colors'
 
 // Place all routes for different screens
 
@@ -19,7 +19,7 @@ export const LoggedIn = TabNavigator({
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => 
-        <FontAwesome name="home" size={30} color={tintColor} />
+        <MaterialIcons name="home" size={30} color={tintColor} />
     }
   },
   Earnings: {
@@ -27,7 +27,7 @@ export const LoggedIn = TabNavigator({
     navigationOptions: {
       tabBarLabel: "Earnings",
       tabBarIcon: ({ tintColor }) => 
-        <MaterialIcons name="attach-money" size={30} color={tintColor} />
+        <FontAwesome name="flag" size={30} color={tintColor} />
     }
   },
   Profile: {
@@ -35,7 +35,7 @@ export const LoggedIn = TabNavigator({
     navigationOptions: {
       tabBarLabel: "Profile",
       tabBarIcon: ({ tintColor }) => 
-        <FontAwesome name="exclamation-circle" size={30} color={tintColor} />
+        <MaterialIcons name="directions-car" size={30} color={tintColor} />
     }
   }
 }, {
@@ -45,10 +45,19 @@ export const LoggedIn = TabNavigator({
   animationEnabled: false,
   tabBarPosition: 'bottom',
   tabBarOptions: {
-    activeTintColor: cyan,
+    activeTintColor: 'white',
+    activeBackgroundColor : blue,
+    inactiveTintColor: nonActiveTint,
+    showIcon: true,
+    labelStyle: {
+      fontSize: 12,
+    },
+    indicatorStyle: {
+      opacity: 0
+    },
     style: {
       height: 56,
-      backgroundColor: 'white',
+      backgroundColor: darkBlue,
       paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     }
   }

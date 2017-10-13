@@ -135,12 +135,12 @@ class Map extends Component {
             style={styles.map}
             initialRegion={region}
             showsUserLocation={true}
-            loadingEnabled={true}
+            showsMyLocationButton={true}
             onPress={() => this.closeInfoBox()}>
             {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
-                style={selectedMarker.id && marker.id !== selectedMarker.id ? styles.hide : '' }
+                style={selectedMarker.id !== null && marker.id !== selectedMarker.id ? styles.hide : ''}
                 zIndex={i}
                 coordinate={marker.coord}
                 pinColor={marker.id === selectedMarker.id ? selectedMarker.color : 'red'}

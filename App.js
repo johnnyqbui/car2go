@@ -32,7 +32,7 @@ export default class App extends Component {
     return (
       <Provider store={createStore(reducer)}>
         <View style={{flex: 1}}>
-          <C2GStatusBar backgroundColor={darkBlue} barStyle="light-content" />
+          <C2GStatusBar backgroundColor='white' barStyle="dark-content" />
           <Layout />
         </View>
       </Provider>
