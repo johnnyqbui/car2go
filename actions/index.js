@@ -7,15 +7,8 @@ export const GET_CURRENT_LOCATION = 'GET_CURRENT_LOCATION'
 export const UPDATE_PROGRESS_BAR = 'UPDATE_PROGRESS_BAR'
 export const TOGGLE_MISSION = 'TOGGLE_MISSION'
 
-export const getAllInitialVehicles = (coords) => {
+export const getAllVehicles = (coords) => {
 	const allVehicles = getDummyData(coords)
-  return {
-    type: GET_ALL_VEHICLES,
-    allVehicles,
-  }
-}
-
-export const getAllVehicles = (allVehicles) => {
   return {
     type: GET_ALL_VEHICLES,
     allVehicles,

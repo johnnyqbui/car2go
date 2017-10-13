@@ -4,10 +4,10 @@ import { Button } from 'react-native-elements'
 import { View, Text, StyleSheet, Platform, Linking, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { blue, alertRed } from '../utils/colors'
-import { toggleMission, getDestination } from '../actions'
+import { toggleMission } from '../actions'
 
 const InfoBox = (props) => {
-  const { selectedMarker, region, toggleMission, getDestination } = props
+  const { selectedMarker, region, toggleMission } = props
 
   const handleDirectionsToCar = () => {
     const { latitude, longitude } = selectedMarker.coord;
@@ -21,11 +21,11 @@ const InfoBox = (props) => {
 
 const handleDirectionsToDestination = () => {
     const { latitude, longitude } = selectedMarker.coord;
-    const rla = region.latitude;
-    const rlo = region.longitude;
+    const dla = selectedMarker.destination.latitude;
+    const dlo = selectedMarker.destination.longitude;
     const url = Platform.OS === 'ios'
-    ? `http://maps.apple.com/maps?saddr=${latitude},${longitude}&daddr=${latitude},${longitude}&dirflg=d`
-    : `http://maps.google.com/maps?saddr=${latitude},${longitude}&daddr=${latitude},${longitude}&dirflg=d`
+    ? `http://maps.apple.com/maps?saddr=${latitude},${longitude}&daddr=${dla},${dlo}&dirflg=d`
+    : `http://maps.google.com/maps?saddr=${latitude},${longitude}&daddr=${dla},${dlo}&dirflg=d`
     if ( latitude ) { return Linking.openURL(url) }
   }
 
@@ -35,31 +35,44 @@ const handleDirectionsToDestination = () => {
     } 
   }
 
-  const roundLat = selectedMarker.destination.latitude 
+  const roundDestLat = selectedMarker.destination.latitude 
   ? selectedMarker.destination.latitude.toFixed(4) : ''
-  const roundLng = selectedMarker.destination.latitude 
-  ? selectedMarker.destination.latitude.toFixed(4) : ''
+  const roundDestLng = selectedMarker.destination.longitude 
+  ? selectedMarker.destination.longitude.toFixed(4) : ''
 
+  const roundCoordLat = selectedMarker.coord.latitude 
+  ? selectedMarker.coord.latitude.toFixed(4) : ''
+  const roundCoordLng = selectedMarker.coord.longitude 
+  ? selectedMarker.coord.longitude.toFixed(4) : ''
+
+  const roundRegionLat = region.latitude ? region.latitude.toFixed(4) : ''
+  const roundRegionLng = region.longitude ? region.longitude.toFixed(4) : ''
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Base Rate: {selectedMarker.bounty}</Text>
       <Text style={styles.text}>Description: {selectedMarker.description}</Text>
       <Text style={styles.text}>Address: {selectedMarker.address}</Text>
-      <Text style={styles.text}>Destination: {roundLat}, {roundLng}</Text>
+      <Text style={styles.text}>Destination: {roundDestLat}, {roundDestLng}</Text>
 
       <View style={styles.buttonContainer}>
-        <Button
+      {
+        // If your location is next to the car then you are able to unlcok it and route to the destination
+        // otherwise you can route to where the car is
+        // I've set one fake vehicle location to your location to test, so click on the marker that is in your location
+        roundCoordLat === roundRegionLat
+        ? <Button
           title={selectedMarker.acceptMission ? 'Abandon' : 'Unlock and Start'} 
           backgroundColor={selectedMarker.acceptMission ? alertRed : blue}
           buttonStyle={styles.button}
           onPress={handletoggleMission}
         />
-        <Button
+        : <Button
           title='Route' 
           backgroundColor={blue}
           buttonStyle={styles.button}
           onPress={handleDirectionsToCar}
         />
+      }
       </View>
     </View>
   )

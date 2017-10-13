@@ -35,7 +35,6 @@ const mapData = (state = mapDataState, action) => {
 }
 
 const vehicleDataState = {
-  initialMarkers: [],
   markers: [],
   selectedMarker: {
     id: null,
@@ -56,7 +55,6 @@ const vehicleData = (state = vehicleDataState, action) => {
     case GET_ALL_VEHICLES :
       return {
         ...state,
-        initialMarkers: allVehicles,
         markers: allVehicles
       }
     case GET_VEHICLE_INFO :
