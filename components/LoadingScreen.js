@@ -15,9 +15,8 @@ class LoadingScreen extends Component {
   componentDidMount() {
     const { progressIncrements, progressDuration } = this.props;
     const timer = setInterval(this.progress, progressDuration);
-    this.setState(state => ({
+    this.setState(() => ({
       timer,
-      progress: state.progress + progressIncrements
     }))
   }
 
@@ -45,7 +44,6 @@ class LoadingScreen extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.text}>Acquiring GPS...</Text>
-        <Text style={styles.text}>Connecting to Control Mission</Text>
         <View style={styles.progressContainer}>
           <Progress.Bar 
             progress={progress} 

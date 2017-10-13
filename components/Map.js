@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Dimensions, Animated, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Image, Animated, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { AppLoading, Location, Permissions, Constants } from 'expo'
 import { Foundation, FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { connect } from 'react-redux'
@@ -100,7 +100,6 @@ class Map extends Component {
     }
 
     getAllVehicles(initialMarkers)
-    getVehicleInfo(selectedMarker)
 
     this.setState({
       toggleInfoBox: false
@@ -119,7 +118,7 @@ class Map extends Component {
 
     if (status === 'denied') {
       return (
-        <View style={styles.center}>
+        <View style={styles.deniedScreen}>
           <Foundation name='alert' size={50} />
           <Text>
             You denied your location. You can fix this by going to your settings and enabling location services for this app.
@@ -145,7 +144,12 @@ class Map extends Component {
                 coordinate={marker.coord}
                 pinColor={marker.id === selectedMarker.id ? selectedMarker.color : 'red'}
                 onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}
-              />
+              >
+                <Image
+                    source={require('../img/generic-blue.png')}
+                    style={styles.marker}
+                />
+              </MapView.Marker>
             )}
             {selectedMarker.destination.latitude &&
               <Circle 
@@ -185,7 +189,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'rgb(5, 10, 48)'
   },
-  center: {
+  deniedScreen: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -225,6 +229,10 @@ const styles = StyleSheet.create({
   map: {
     height: height,
     width: width
+  },
+  marker: {
+    width: 26,
+    resizeMode: 'contain' 
   },
   infoBoxContainer: {
     zIndex: 6,

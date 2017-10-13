@@ -65,6 +65,7 @@ const vehicleData = (state = vehicleDataState, action) => {
     case GET_VEHICLE_INFO :
       return {
         ...state,
+        markers:[selectedMarker],
         selectedMarker
       }
     case TOGGLE_MISSION :
@@ -83,7 +84,7 @@ const vehicleData = (state = vehicleDataState, action) => {
 const progressBarState = {
     // Must set between 0.1 - 1
     progressIncrements: 1,
-    progressDuration: 1500,
+    progressDuration: 1000,
     progress: 0
 }
 
