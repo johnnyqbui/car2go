@@ -24,8 +24,8 @@ const handleDirectionsToDestination = () => {
     const rla = region.latitude;
     const rlo = region.longitude;
     const url = Platform.OS === 'ios'
-    ? `http://maps.apple.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
-    : `http://maps.google.com/maps?saddr=${rla},${rlo}&daddr=${latitude},${longitude}&dirflg=d`
+    ? `http://maps.apple.com/maps?saddr=${latitude},${longitude}&daddr=${latitude},${longitude}&dirflg=d`
+    : `http://maps.google.com/maps?saddr=${latitude},${longitude}&daddr=${latitude},${longitude}&dirflg=d`
     if ( latitude ) { return Linking.openURL(url) }
   }
 
@@ -34,12 +34,18 @@ const handleDirectionsToDestination = () => {
       toggleMission(selectedMarker)
     } 
   }
+
+  const roundLat = selectedMarker.destination.latitude 
+  ? selectedMarker.destination.latitude.toFixed(4) : ''
+  const roundLng = selectedMarker.destination.latitude 
+  ? selectedMarker.destination.latitude.toFixed(4) : ''
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Bounty Rate: {selectedMarker.bounty}</Text>
+      <Text style={styles.text}>Base Rate: {selectedMarker.bounty}</Text>
       <Text style={styles.text}>Description: {selectedMarker.description}</Text>
       <Text style={styles.text}>Address: {selectedMarker.address}</Text>
-      <Text style={styles.text}>Destination: {selectedMarker.destination.latitude}, {selectedMarker.destination.longitude}</Text>
+      <Text style={styles.text}>Destination: {roundLat}, {roundLng}</Text>
 
       <View style={styles.buttonContainer}>
         <Button

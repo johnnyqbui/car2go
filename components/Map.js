@@ -88,7 +88,7 @@ class Map extends Component {
   }
 
   closeInfoBox = () => {
-    const { getAllVehicles, getVehicleInfo, initialMarkers } = this.props;
+    const { getVehicleInfo, initialMarkers } = this.props;
     const selectedMarker = {
       id: null,
       color: '',
@@ -99,7 +99,7 @@ class Map extends Component {
       destination: {}
     }
 
-    getAllVehicles(initialMarkers)
+    getVehicleInfo(selectedMarker)
 
     this.setState({
       toggleInfoBox: false
@@ -140,11 +140,11 @@ class Map extends Component {
             {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
+                style={selectedMarker.id && marker.id !== selectedMarker.id ? styles.hide : '' }
                 zIndex={i}
                 coordinate={marker.coord}
                 pinColor={marker.id === selectedMarker.id ? selectedMarker.color : 'red'}
-                onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}
-              >
+                onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}>
                 <Image
                     source={require('../img/generic-blue.png')}
                     style={styles.marker}
@@ -233,6 +233,12 @@ const styles = StyleSheet.create({
   marker: {
     width: 26,
     resizeMode: 'contain' 
+  },
+  hide: {
+    display: 'none'
+  },
+  show: {
+    display: 'flex'
   },
   infoBoxContainer: {
     zIndex: 6,

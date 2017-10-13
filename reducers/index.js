@@ -44,10 +44,7 @@ const vehicleDataState = {
     bounty: '',
     description: '', 
     address: '',
-    destination: {
-      latitude: null,
-      longitude: null
-    },
+    destination: {},
     acceptMission: false
   },
 }
@@ -65,7 +62,6 @@ const vehicleData = (state = vehicleDataState, action) => {
     case GET_VEHICLE_INFO :
       return {
         ...state,
-        markers:[selectedMarker],
         selectedMarker
       }
     case TOGGLE_MISSION :
