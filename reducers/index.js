@@ -38,7 +38,6 @@ const vehicleDataState = {
   markers: [],
   selectedMarker: {
     id: null,
-    color: '',
     coord: {},
     bounty: '',
     description: '', 

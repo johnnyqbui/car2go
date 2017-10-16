@@ -3,13 +3,12 @@ import { Platform, StatusBar } from "react-native";
 import { StackNavigator, TabNavigator } from "react-navigation";
 import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
-import LoadingScreen from "./components/LoadingScreen";
-import Login from "./components/Login";
-import DashBoard from "./components/DashBoard";
-import Map from "./components/Map";
-import Earnings from "./components/Earnings";
-import Profile from "./components/Profile";
-import { darkBlue, blue, nonActiveTint } from './utils/colors'
+import LoadingScreen from "../components/LoadingScreen";
+import Login from "../components/Login";
+import Map from "../components/Map";
+import Earnings from "../components/Earnings";
+import Mission from "../components/Mission";
+import { darkBlue, blue, nonActiveTint } from '../utils/colors'
 
 // Place all routes for different screens
 
@@ -30,10 +29,10 @@ export const LoggedIn = TabNavigator({
         <FontAwesome name="flag" size={30} color={tintColor} />
     }
   },
-  Profile: {
-    screen: Profile,
+  Mission: {
+    screen: Mission,
     navigationOptions: {
-      tabBarLabel: "Profile",
+      tabBarLabel: "Mission",
       tabBarIcon: ({ tintColor }) => 
         <MaterialIcons name="directions-car" size={30} color={tintColor} />
     }
@@ -41,6 +40,7 @@ export const LoggedIn = TabNavigator({
 }, {
   navigationOptions: {
     header: null,
+    // tabBarVisible: false
   },
   animationEnabled: false,
   tabBarPosition: 'bottom',

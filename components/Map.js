@@ -8,11 +8,12 @@ import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
 import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
 import InfoBox from './InfoBox'
+import markerIcon from '../img/generic-blue.png'
 
 class Map extends Component {
   state = {
     status: null,
-    toggleInfoBox: false,
+    toggleInfoBox: false
   }
 
   shouldComponentUpdate({ progress }) {
@@ -63,10 +64,9 @@ class Map extends Component {
 
   openInfoBox = ({ id, color, coord, bounty, description, address, destination }) => {
     const { toggleInfoBox } = this.state
-    const { getVehicleInfo } = this.props;
+    const { getVehicleInfo, navigation } = this.props;
     const selectedMarker = {
       id, 
-      color: 'green', 
       coord, 
       bounty, 
       description, 
@@ -84,14 +84,12 @@ class Map extends Component {
     this.setState({
       toggleInfoBox: true
     })
-
   }
 
   closeInfoBox = () => {
     const { getVehicleInfo, initialMarkers } = this.props;
     const selectedMarker = {
       id: null,
-      color: '',
       coord: {},
       bounty: '',
       description: '', 
@@ -107,7 +105,7 @@ class Map extends Component {
   }
 
   render() {
-    const { status, toggleInfoBox } = this.state
+    const { status, toggleInfoBox, image } = this.state
     const { navigation, region, selectedMarker, markers } = this.props
 
     if (status === null) {
@@ -143,10 +141,9 @@ class Map extends Component {
                 style={selectedMarker.id !== null && marker.id !== selectedMarker.id ? styles.hide : ''}
                 zIndex={i}
                 coordinate={marker.coord}
-                pinColor={marker.id === selectedMarker.id ? selectedMarker.color : 'red'}
                 onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}>
                 <Image
-                    source={require('../img/generic-blue.png')}
+                    source={markerIcon}
                     style={styles.marker}
                 />
               </MapView.Marker>
@@ -168,9 +165,10 @@ class Map extends Component {
             underlayColor='grey'>
             <MaterialIcons name="my-location" size={30} color='black'/>
           </TouchableHighlight>
-          <View style={styles.infoBoxContainer}>
-            <InfoBox />
-          </View>
+          {toggleInfoBox && 
+            <View style={styles.infoBoxContainer}>
+              <InfoBox />
+            </View>}
         </View>
       )
     }

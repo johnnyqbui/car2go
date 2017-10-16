@@ -3,7 +3,7 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { View, StatusBar } from 'react-native';
 import { Constants } from 'expo'
-import { createRootNavigator } from "./router";
+import { createRootNavigator } from "./routes/router";
 import { isLoggedIn } from "./auth/_auth";
 import { darkBlue } from './utils/colors'
 import reducer from './reducers'

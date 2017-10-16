@@ -1,41 +1,34 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import { Entypo, MaterialIcons } from '@expo/vector-icons'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { cyan, gray, lightGray } from '../utils/colors'
 
-export default function Earnings () {
+export default Mission = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image source={require('../img/logo.png')}/>
-        <Text style={{color: cyan, fontSize: 25}}>
-          Fleetshifter
-        </Text>
-      </View>
-
       <TouchableOpacity style={styles.link}>
-        <MaterialIcons name="person" style={styles.icon} size={25} />
+        <Entypo name="help" style={styles.icon} size={25} />
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
-            Login
+            Help
           </Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.link}>
-        <MaterialIcons name="person-add" style={styles.icon} size={25} />
+        <FontAwesome name="exclamation-circle" style={styles.icon} size={25} />
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
-            Register
+            About
           </Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.link}>
-        <Entypo name="text-document-inverted" style={styles.icon} size={25} />
+        <MaterialIcons name="settings" style={styles.icon} size={25} />
         <View style={{flexDirection: 'column'}}>
           <Text style={styles.text}>
-            Documents
+            Settings
           </Text>
         </View>
       </TouchableOpacity>
@@ -47,11 +40,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  header: {
-    margin: 50,
-    alignItems: 'center',
-    flexDirection: 'row'
   },
   link: {
     flex: 1,
@@ -69,8 +57,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: 25,
   },
-  subText: {
-    fontSize: 15,
-    color: gray,
-  }
 });
