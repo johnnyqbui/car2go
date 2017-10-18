@@ -11,6 +11,15 @@ import InfoBox from './InfoBox'
 import markerIcon from '../img/generic-blue.png'
 
 class Map extends Component {
+  
+   // Options for tab navigation
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {};
+    return {
+      tabBarVisible: params.tabBarVisible
+    }
+  }
+
   state = {
     status: null,
     toggleInfoBox: false
@@ -21,13 +30,18 @@ class Map extends Component {
     return progress > 0
   }
 
+  componentWillMount() {
+    this.props.navigation.setParams({ 
+      tabBarVisible: true
+    });
+  }
+
   componentDidMount() {
     Permissions.askAsync(Permissions.LOCATION)
       .then(({ status }) => {
         if (status === 'granted') {
           this.setLocation()
         }
-        this.setState(() => ({ status }))
       })
       .catch((error) => {
         console.warn('Error getting Location permission: ', error)
@@ -84,6 +98,10 @@ class Map extends Component {
     this.setState({
       toggleInfoBox: true
     })
+
+    this.props.navigation.setParams({
+      tabBarVisible: false
+    })
   }
 
   closeInfoBox = () => {
@@ -102,13 +120,17 @@ class Map extends Component {
     this.setState({
       toggleInfoBox: false
     })
+
+    this.props.navigation.setParams({
+      tabBarVisible: true
+    })
   }
 
   render() {
     const { status, toggleInfoBox, image } = this.state
     const { navigation, region, selectedMarker, markers } = this.props
 
-    if (status === null) {
+    if (status === null || Object.keys(region).length === 0) {
       return (
         <LoadingScreen />
       )
@@ -133,18 +155,18 @@ class Map extends Component {
             style={styles.map}
             initialRegion={region}
             showsUserLocation={true}
-            showsMyLocationButton={true}
+            // to prevent marker from center on android
+            moveOnMarkerPress={false}
             onPress={() => this.closeInfoBox()}>
             {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
-                style={selectedMarker.id !== null && marker.id !== selectedMarker.id ? styles.hide : ''}
                 zIndex={i}
                 coordinate={marker.coord}
                 onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}>
                 <Image
-                    source={markerIcon}
-                    style={styles.marker}
+                  source={markerIcon}
+                  style={selectedMarker.id !== null && marker.id !== selectedMarker.id ? styles.hide : styles.marker}
                 />
               </MapView.Marker>
             )}
@@ -156,11 +178,9 @@ class Map extends Component {
                 strokeColor={blue}
                 fillColor={'rgba(65, 80, 191, .4)'}/>
             }
-            
           </MapView>
-
           <TouchableHighlight
-            style={[styles.button, styles.getLocationButton]}
+            style={styles.getLocationButton}
             onPress={this.centerCurrentLocation}
             underlayColor='grey'>
             <MaterialIcons name="my-location" size={30} color='black'/>
@@ -194,13 +214,6 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
   },
-  button: {
-    padding: 10,
-    backgroundColor: blue,
-    alignSelf: 'center',
-    borderRadius: 5,
-    margin: 20,
-  },
   buttonText :{
     color: white,
     fontSize: 20,
@@ -215,9 +228,9 @@ const styles = StyleSheet.create({
   },
   getLocationButton: {
     zIndex: 3,
-    top: 75,
+    top: 15,
     right: 0,
-    margin: 20,
+    margin: 15,
     paddingHorizontal: 10,
     paddingVertical: 10,
     position: 'absolute',
@@ -230,10 +243,13 @@ const styles = StyleSheet.create({
   },
   marker: {
     width: 26,
-    resizeMode: 'contain' 
+    resizeMode: 'cover'
   },
   hide: {
-    display: 'none'
+    display: 'none',
+    height: 0,
+    width: 0,
+    resizeMode: 'contain'
   },
   show: {
     display: 'flex'

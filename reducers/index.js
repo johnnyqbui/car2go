@@ -17,17 +17,12 @@ const mapDataState = {
 }
 
 const mapData = (state = mapDataState, action) => {
-  const { coords } = action
+  const { region } = action
   switch (action.type) {
     case GET_CURRENT_LOCATION :
       return {
         ...state,
-        region: {
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-          latitudeDelta: 0.7,
-          longitudeDelta: 0.7,
-        }
+        region
       }
     default :
       return state
@@ -49,7 +44,6 @@ const vehicleDataState = {
 
 const vehicleData = (state = vehicleDataState, action) => {
   const { allVehicles, selectedMarker, clearDestination } = action
-
   switch (action.type) {
     case GET_ALL_VEHICLES :
       return {
@@ -93,7 +87,6 @@ const progressBarData = (state = progressBarState, action) => {
       return state
   }
 }
-
 
 export default combineReducers({
 	vehicleData,

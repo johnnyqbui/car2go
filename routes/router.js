@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, StatusBar } from "react-native";
+import { Dimensions, Platform, StatusBar } from "react-native";
 import { StackNavigator, TabNavigator } from "react-navigation";
 import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
@@ -10,8 +10,9 @@ import Earnings from "../components/Earnings";
 import Mission from "../components/Mission";
 import { darkBlue, blue, nonActiveTint } from '../utils/colors'
 
-// Place all routes for different screens
+const { width } = Dimensions.get('window');
 
+// Place all routes for different screens
 export const LoggedIn = TabNavigator({
   Map: {
     screen: Map,
@@ -38,17 +39,14 @@ export const LoggedIn = TabNavigator({
     }
   }
 }, {
-  navigationOptions: {
-    header: null,
-    // tabBarVisible: false
-  },
   animationEnabled: false,
   tabBarPosition: 'bottom',
   tabBarOptions: {
     activeTintColor: 'white',
-    activeBackgroundColor : blue,
     inactiveTintColor: nonActiveTint,
+    activeBackgroundColor : blue,
     showIcon: true,
+    showLabel: true, 
     labelStyle: {
       fontSize: 12,
     },
@@ -58,15 +56,17 @@ export const LoggedIn = TabNavigator({
     style: {
       height: 56,
       backgroundColor: darkBlue,
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      position: 'absolute',
+      width: width,
+      bottom: 0,
     }
   }
 });
 
 // Default screen is login
 export const createRootNavigator = (loggedIn) => {
-  return StackNavigator(
-    {
+  return StackNavigator({
       LoggedOut: {
         screen: Login,
         navigationOptions: {
@@ -85,6 +85,5 @@ export const createRootNavigator = (loggedIn) => {
       headerMode: "none",
       mode: "modal",
       initialRouteName: loggedIn ? "LoggedIn" : "LoggedOut"
-    }
-  );
+    })
 };

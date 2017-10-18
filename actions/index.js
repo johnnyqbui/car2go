@@ -22,10 +22,10 @@ export const getVehicleInfo = (selectedMarker) => {
   }
 }
 
-export const getCurrentLocation = (coords) => {
+export const getCurrentLocation = (region) => {
   return {
     type: GET_CURRENT_LOCATION,
-    coords
+    region
   }
 }
 
