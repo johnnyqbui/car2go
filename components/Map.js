@@ -1,14 +1,25 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Dimensions, Image, Animated, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Dimensions, 
+  Image, 
+  Animated, 
+  Easing,
+  TouchableHighlight, 
+  TouchableOpacity, 
+  ActivityIndicator } from 'react-native'
+import { connect } from 'react-redux'
 import { AppLoading, Location, Permissions, Constants } from 'expo'
 import { Foundation, FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { connect } from 'react-redux'
+import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
 import MapView, { Circle } from 'react-native-maps'
+import markerIcon from '../img/generic-blue.png'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
-import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
 import InfoBox from './InfoBox'
-import markerIcon from '../img/generic-blue.png'
+import TabSummary from './TabSummary'
 
 class Map extends Component {
   
@@ -22,7 +33,8 @@ class Map extends Component {
 
   state = {
     status: null,
-    toggleInfoBox: false
+    toggleInfoBox: false,
+    bottom: new Animated.Value(-200)
   }
 
   shouldComponentUpdate({ progress }) {
@@ -76,24 +88,14 @@ class Map extends Component {
     this.refs.map.animateToRegion(region, 300)
   }
 
-  openInfoBox = ({ id, color, coord, bounty, description, address, destination }) => {
-    const { toggleInfoBox } = this.state
-    const { getVehicleInfo, navigation } = this.props;
-    const selectedMarker = {
-      id, 
-      coord, 
-      bounty, 
-      description, 
-      address, 
-      destination
-    }
+  openInfoBox = () => {
+    const { bottom } = this.state
+    const { navigation } = this.props;
 
-    this.refs.map.fitToCoordinates([coord, destination], {
-       edgePadding: { top: 150, right: 50, bottom: 50, left: 50 },
-       animated: true,
-    })
-
-    getVehicleInfo(selectedMarker)
+    Animated.timing(bottom, { 
+      toValue: 0, 
+      duration: 400,
+    }).start()
 
     this.setState({
       toggleInfoBox: true
@@ -105,17 +107,13 @@ class Map extends Component {
   }
 
   closeInfoBox = () => {
-    const { getVehicleInfo, initialMarkers } = this.props;
-    const selectedMarker = {
-      id: null,
-      coord: {},
-      bounty: '',
-      description: '', 
-      address: '',
-      destination: {}
-    }
+    const { bottom } = this.state;
+    const { navigation } = this.props;
 
-    getVehicleInfo(selectedMarker)
+    Animated.timing(bottom, { 
+      toValue: -200,
+      duration: 400,
+    }).start()
 
     this.setState({
       toggleInfoBox: false
@@ -126,8 +124,39 @@ class Map extends Component {
     })
   }
 
+  handleGetVehicleInfo = (marker) => {
+    const { getVehicleInfo } = this.props;
+    if (marker) {
+      const {
+        id, 
+        coord, 
+        bounty, 
+        description, 
+        address, 
+        destination
+      } = marker;
+
+      this.refs.map.fitToCoordinates([coord, destination], {
+        edgePadding: { top: 150, right: 50, bottom: 50, left: 50 },
+        animated: true,
+      })
+
+      getVehicleInfo(marker)
+    } else {
+      const marker = {
+        id: null,
+        coord: {},
+        bounty: '',
+        description: '', 
+        address: '',
+        destination: {}
+      }
+      getVehicleInfo(marker)
+    }
+  }
+
   render() {
-    const { status, toggleInfoBox, image } = this.state
+    const { status, toggleInfoBox, image, bottom } = this.state
     const { navigation, region, selectedMarker, markers } = this.props
 
     if (status === null || Object.keys(region).length === 0) {
@@ -150,6 +179,7 @@ class Map extends Component {
     if (status === 'granted') {
       return (
         <View style={styles.container}>
+          <TabSummary />
           <MapView
             ref="map"
             style={styles.map}
@@ -157,13 +187,20 @@ class Map extends Component {
             showsUserLocation={true}
             // to prevent marker from center on android
             moveOnMarkerPress={false}
-            onPress={() => this.closeInfoBox()}>
+            onPress={() => {
+              this.closeInfoBox()
+              this.handleGetVehicleInfo()}
+            }>
             {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
                 zIndex={i}
                 coordinate={marker.coord}
-                onPress={(e) => {e.stopPropagation(); this.openInfoBox(marker)}}>
+                onPress={(e) => {
+                  e.stopPropagation(); 
+                  this.openInfoBox()
+                  this.handleGetVehicleInfo(marker)}
+                }>
                 <Image
                   source={markerIcon}
                   style={selectedMarker.id !== null && marker.id !== selectedMarker.id ? styles.hide : styles.marker}
@@ -185,17 +222,16 @@ class Map extends Component {
             underlayColor='grey'>
             <MaterialIcons name="my-location" size={30} color='black'/>
           </TouchableHighlight>
-          {toggleInfoBox && 
-            <View style={styles.infoBoxContainer}>
-              <InfoBox />
-            </View>}
+          <Animated.View style={[styles.infoBoxContainer, { bottom }]}>
+            <InfoBox />
+          </Animated.View>
         </View>
       )
     }
   }
 }
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     zIndex: 3,
@@ -228,7 +264,7 @@ const styles = StyleSheet.create({
   },
   getLocationButton: {
     zIndex: 3,
-    top: 15,
+    top: 55,
     right: 0,
     margin: 15,
     paddingHorizontal: 10,
@@ -243,24 +279,19 @@ const styles = StyleSheet.create({
   },
   marker: {
     width: 26,
-    resizeMode: 'cover'
   },
   hide: {
-    display: 'none',
-    height: 0,
     width: 0,
-    resizeMode: 'contain'
   },
   show: {
     display: 'flex'
   },
   infoBoxContainer: {
-    zIndex: 6,
+    zIndex: 10,
     position: 'absolute',
     alignItems: 'center',
     right: 0,
     left: 0,
-    bottom: 0,
   }
 });
 
