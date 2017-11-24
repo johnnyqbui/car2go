@@ -4,7 +4,8 @@ import {
   GET_VEHICLE_INFO, 
   GET_CURRENT_LOCATION,
   UPDATE_PROGRESS_BAR,
-  TOGGLE_MISSION } from '../actions'
+  TOGGLE_MISSION 
+} from '../actions'
 
 const mapDataState = {
   region: {
@@ -40,6 +41,7 @@ const vehicleDataState = {
     destination: {},
     acceptMission: false
   },
+  infoBoxIsOpen: false,
 }
 
 const vehicleData = (state = vehicleDataState, action) => {

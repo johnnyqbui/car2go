@@ -1,5 +1,4 @@
 import { getDummyData } from '../utils/_vehicles'
-import { getFakeDestination } from '../utils/_destination'
 
 export const GET_ALL_VEHICLES = 'GET_ALL_VEHICLES'
 export const GET_VEHICLE_INFO = 'GET_VEHICLE_INFO'

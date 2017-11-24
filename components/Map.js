@@ -33,19 +33,12 @@ class Map extends Component {
 
   state = {
     status: null,
-    toggleInfoBox: false,
     bottom: new Animated.Value(-200)
   }
 
   shouldComponentUpdate({ progress }) {
     // Loading Screen
     return progress > 0
-  }
-
-  componentWillMount() {
-    this.props.navigation.setParams({ 
-      tabBarVisible: true
-    });
   }
 
   componentDidMount() {
@@ -88,76 +81,64 @@ class Map extends Component {
     this.refs.map.animateToRegion(region, 300)
   }
 
-  openInfoBox = () => {
+  openInfoBox = (e, marker) => {
     const { bottom } = this.state
-    const { navigation } = this.props;
+    const { getVehicleInfo, navigation } = this.props;
+    e.stopPropagation(); 
 
     Animated.timing(bottom, { 
       toValue: 0, 
-      duration: 400,
+      duration: 600,
     }).start()
-
-    this.setState({
-      toggleInfoBox: true
-    })
 
     this.props.navigation.setParams({
       tabBarVisible: false
     })
+
+    const {
+      id, 
+      coord, 
+      bounty, 
+      description, 
+      address, 
+      destination
+    } = marker;
+
+    this.refs.map.fitToCoordinates([coord, destination], {
+      edgePadding: { top: 150, right: 50, bottom: 150, left: 50 },
+      animated: true,
+    })
+
+    getVehicleInfo(marker)
   }
 
   closeInfoBox = () => {
     const { bottom } = this.state;
-    const { navigation } = this.props;
+    const { getVehicleInfo, navigation } = this.props;
 
     Animated.timing(bottom, { 
       toValue: -200,
-      duration: 400,
+      duration: 600,
     }).start()
-
-    this.setState({
-      toggleInfoBox: false
-    })
 
     this.props.navigation.setParams({
       tabBarVisible: true
     })
-  }
 
-  handleGetVehicleInfo = (marker) => {
-    const { getVehicleInfo } = this.props;
-    if (marker) {
-      const {
-        id, 
-        coord, 
-        bounty, 
-        description, 
-        address, 
-        destination
-      } = marker;
-
-      this.refs.map.fitToCoordinates([coord, destination], {
-        edgePadding: { top: 150, right: 50, bottom: 50, left: 50 },
-        animated: true,
-      })
-
-      getVehicleInfo(marker)
-    } else {
-      const marker = {
-        id: null,
-        coord: {},
-        bounty: '',
-        description: '', 
-        address: '',
-        destination: {}
-      }
-      getVehicleInfo(marker)
+    const marker = {
+      id: null,
+      coord: {},
+      bounty: '',
+      description: '', 
+      address: '',
+      destination: {}
     }
+    getVehicleInfo(marker)
   }
 
   render() {
-    const { status, toggleInfoBox, image, bottom } = this.state
-    const { navigation, region, selectedMarker, markers } = this.props
+    const { status, image, bottom } = this.state
+    const { navigation, region, selectedMarker, markers, infoBox } = this.props
 
     if (status === null || Object.keys(region).length === 0) {
       return (
@@ -187,20 +168,13 @@ class Map extends Component {
             showsUserLocation={true}
             // to prevent marker from center on android
             moveOnMarkerPress={false}
-            onPress={() => {
-              this.closeInfoBox()
-              this.handleGetVehicleInfo()}
-            }>
+            onPress={() => this.closeInfoBox()}>
             {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
                 zIndex={i}
                 coordinate={marker.coord}
-                onPress={(e) => {
-                  e.stopPropagation(); 
-                  this.openInfoBox()
-                  this.handleGetVehicleInfo(marker)}
-                }>
+                onPress={(e) => this.openInfoBox(e, marker)}>
                 <Image
                   source={markerIcon}
                   style={selectedMarker.id !== null && marker.id !== selectedMarker.id ? styles.hide : styles.marker}
@@ -223,7 +197,7 @@ class Map extends Component {
             <MaterialIcons name="my-location" size={30} color='black'/>
           </TouchableHighlight>
           <Animated.View style={[styles.infoBoxContainer, { bottom }]}>
-            <InfoBox />
+            <InfoBox closeInfoBox={this.closeInfoBox}/>
           </Animated.View>
         </View>
       )
@@ -237,10 +211,7 @@ const styles = StyleSheet.create({
     zIndex: 3,
     flex: 1,
     flexDirection: 'row',
-    position: 'absolute',
     width: width,
-    justifyContent: 'space-around',
-    bottom: 0,
     backgroundColor: 'rgb(5, 10, 48)'
   },
   deniedScreen: {
@@ -264,7 +235,7 @@ const styles = StyleSheet.create({
   },
   getLocationButton: {
     zIndex: 3,
-    top: 55,
+    top: 40,
     right: 0,
     margin: 15,
     paddingHorizontal: 10,
@@ -304,7 +275,7 @@ const mapStateToProps = (state, { navigation }) => {
     progress: progressBarData.progress,
     markers,
     selectedMarker,
-    navigation,
+    navigation
   }
 }
 

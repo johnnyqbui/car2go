@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import { Button } from 'react-native-elements'
 import { View, Text, StyleSheet, Platform, Linking, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
-import { gray, blue, alertRed } from '../utils/colors'
+import { lightGray, blue, alertRed } from '../utils/colors'
 import { toggleMission } from '../actions'
 
 const InfoBox = (props) => {
-  const { selectedMarker, region, toggleMission } = props
+  const { selectedMarker, region, toggleMission, closeInfoBox } = props
 
   const handleDirectionsToCar = () => {
     const { latitude, longitude } = selectedMarker.coord;
@@ -35,10 +35,6 @@ const handleDirectionsToDestination = () => {
     } 
   }
 
-  const handleBack = () => {
-
-  }
-
   const roundDestLat = selectedMarker.destination.latitude 
   ? selectedMarker.destination.latitude.toFixed(4) : ''
   const roundDestLng = selectedMarker.destination.longitude 
@@ -53,17 +49,18 @@ const handleDirectionsToDestination = () => {
   const roundRegionLng = region.longitude ? region.longitude.toFixed(4) : ''
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Base Rate: {selectedMarker.bounty}</Text>
-      <Text style={styles.text}>Description: {selectedMarker.description}</Text>
+
+      <Text style={styles.text}>Base {selectedMarker.bounty}</Text>
       <Text style={styles.text}>Address: {selectedMarker.address}</Text>
       <Text style={styles.text}>Destination: {roundDestLat}, {roundDestLng}</Text>
 
       <View style={styles.buttonContainer}>
         <Button
           title={'Back'} 
-          backgroundColor={gray}
+          backgroundColor={lightGray}
           buttonStyle={styles.button}
-          onPress={handleBack}
+          color="black"
+          onPress={closeInfoBox}
         />
       {
         // If your location is right next to the car then you are able to unlock it and route to the destination
@@ -77,7 +74,7 @@ const handleDirectionsToDestination = () => {
           onPress={handletoggleMission}
         />
         : <Button
-          title='Route' 
+          title='Route to car' 
           backgroundColor={blue}
           buttonStyle={styles.button}
           onPress={handleDirectionsToCar}
@@ -94,12 +91,18 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
-    width: width
+    width: width,
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 99999
   },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around'
+  },
+  backButton: {
+    color: 'white'
   },
   button: {
     marginTop: 15,

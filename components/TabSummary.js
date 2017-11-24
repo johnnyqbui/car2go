@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native'
 import { gray } from '../utils/colors'
-import profilePic from '../img/temp.jpg'
+import profilePic from '../img/temp.png'
 
 export default TabSummary = () => {
   return (
@@ -13,7 +13,7 @@ export default TabSummary = () => {
           style={styles.profilePic}
         />
       </TouchableOpacity>
-      <Text style={styles.text}>Tab summary here</Text>
+      <Text style={styles.text}>Ready For Mission</Text>
     </View>
   )
 }
@@ -22,7 +22,7 @@ const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    top: 20,
+    top: 0,
     zIndex: 6,
     width: width,
     height: 45,

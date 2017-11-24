@@ -54,12 +54,12 @@ export const LoggedIn = TabNavigator({
       opacity: 0
     },
     style: {
-      height: 56,
+      height: 50,
       backgroundColor: darkBlue,
-      paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      position: 'absolute',
-      width: width,
-      bottom: 0,
+      // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      // position: 'absolute',
+      // width: width,
+      // bottom: 0,
     }
   }
 });
