@@ -13,12 +13,13 @@ import {
 import { connect } from 'react-redux'
 import { AppLoading, Location, Permissions, Constants } from 'expo'
 import { Foundation, FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions'
+import { getAllVehicles, getVehicleInfo, getCurrentLocation, openInfoBox, closeInfoBox } from '../actions'
 import MapView, { Circle } from 'react-native-maps'
 import markerIcon from '../img/generic-blue.png'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
 import InfoBox from './InfoBox'
+import AccountInfo from './AccountInfo'
 import TabSummary from './TabSummary'
 
 class Map extends Component {
@@ -33,6 +34,7 @@ class Map extends Component {
 
   state = {
     status: null,
+    left: new Animated.Value(-width),
     bottom: new Animated.Value(-200)
   }
 
@@ -66,9 +68,8 @@ class Map extends Component {
         latitudeDelta: 0.5,
         longitudeDelta: 0.5,
       }
-      
-      getCurrentLocation(region)
 
+      getCurrentLocation(region)
       //********* TEMP FUNCTION FOR DUMMY DATA *****************//
       if (markers.length === 0) {
         getAllVehicles(coords)
@@ -83,7 +84,7 @@ class Map extends Component {
 
   openInfoBox = (e, marker) => {
     const { bottom } = this.state
-    const { getVehicleInfo, navigation } = this.props;
+    const { getVehicleInfo, navigation, openInfoBox } = this.props;
     e.stopPropagation(); 
 
     Animated.timing(bottom, { 
@@ -91,7 +92,7 @@ class Map extends Component {
       duration: 600,
     }).start()
 
-    this.props.navigation.setParams({
+    navigation.setParams({
       tabBarVisible: false
     })
 
@@ -105,23 +106,24 @@ class Map extends Component {
     } = marker;
 
     this.refs.map.fitToCoordinates([coord, destination], {
-      edgePadding: { top: 150, right: 50, bottom: 150, left: 50 },
+      edgePadding: { top: 100, right: 50, bottom: 250, left: 50 },
       animated: true,
     })
 
     getVehicleInfo(marker)
+    openInfoBox();
   }
 
   closeInfoBox = () => {
     const { bottom } = this.state;
-    const { getVehicleInfo, navigation } = this.props;
+    const { getVehicleInfo, navigation, closeInfoBox } = this.props;
 
     Animated.timing(bottom, { 
       toValue: -200,
       duration: 600,
     }).start()
 
-    this.props.navigation.setParams({
+    navigation.setParams({
       tabBarVisible: true
     })
 
@@ -134,10 +136,44 @@ class Map extends Component {
       destination: {}
     }
     getVehicleInfo(marker)
+    closeInfoBox()
+  }
+
+  openAccountInfo = () => {
+    const { left } = this.state;
+    const { navigation } = this.props;
+
+    Animated.timing(left, { 
+      toValue: 0,
+      duration: 400,
+    }).start()
+
+    // navigation.setParams({
+    //   tabBarVisible: false
+    // })
+  }
+
+  closeAccountInfo = () => {
+    const { left } = this.state;
+    const { navigation } = this.props;
+
+    Animated.timing(left, { 
+      toValue: -width,
+      duration: 800,
+    }).start()
+
+    // navigation.setParams({
+    //   tabBarVisible: true
+    // })
+  }
+
+  reset = () => {
+    this.closeInfoBox()
+    this.closeAccountInfo()
   }
 
   render() {
-    const { status, image, bottom } = this.state
+    const { status, image, bottom, left } = this.state
     const { navigation, region, selectedMarker, markers, infoBox } = this.props
 
     if (status === null || Object.keys(region).length === 0) {
@@ -160,7 +196,10 @@ class Map extends Component {
     if (status === 'granted') {
       return (
         <View style={styles.container}>
-          <TabSummary />
+          <Animated.View style={[styles.accountInfoContainer, { left }]}>
+            <AccountInfo navigation={navigation}/>
+          </Animated.View>
+          <TabSummary openAccountInfo={this.openAccountInfo} />
           <MapView
             ref="map"
             style={styles.map}
@@ -168,7 +207,7 @@ class Map extends Component {
             showsUserLocation={true}
             // to prevent marker from center on android
             moveOnMarkerPress={false}
-            onPress={() => this.closeInfoBox()}>
+            onPress={() => this.reset()}>
             {markers.map((marker, i) => 
               <MapView.Marker
                 key={i}
@@ -257,12 +296,13 @@ const styles = StyleSheet.create({
   show: {
     display: 'flex'
   },
+  accountInfoContainer: {
+    zIndex: 10,
+    position: 'absolute',
+  },
   infoBoxContainer: {
     zIndex: 10,
     position: 'absolute',
-    alignItems: 'center',
-    right: 0,
-    left: 0,
   }
 });
 
@@ -284,6 +324,8 @@ const mapDispatchToProps = (dispatch, { navigation }) => {
     getAllVehicles: (coords) => dispatch(getAllVehicles(coords)),
     getVehicleInfo: (coords) => dispatch(getVehicleInfo(coords)),
     getCurrentLocation: (coords) => dispatch(getCurrentLocation(coords)),
+    openInfoBox: () => dispatch(openInfoBox()),
+    closeInfoBox: () => dispatch(closeInfoBox())
   }
 }
 

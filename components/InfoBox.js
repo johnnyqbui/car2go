@@ -49,10 +49,11 @@ const handleDirectionsToDestination = () => {
   const roundRegionLng = region.longitude ? region.longitude.toFixed(4) : ''
   return (
     <View style={styles.container}>
-
-      <Text style={styles.text}>Base {selectedMarker.bounty}</Text>
-      <Text style={styles.text}>Address: {selectedMarker.address}</Text>
-      <Text style={styles.text}>Destination: {roundDestLat}, {roundDestLng}</Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.text}>Base {selectedMarker.bounty}</Text>
+        <Text style={styles.text}>Bonus: $0.14/min</Text>
+        <Text style={styles.text}>Time Limit: 30min</Text>
+      </View>
 
       <View style={styles.buttonContainer}>
         <Button
@@ -74,7 +75,7 @@ const handleDirectionsToDestination = () => {
           onPress={handletoggleMission}
         />
         : <Button
-          title='Route to car' 
+          title='Route to Car' 
           backgroundColor={blue}
           buttonStyle={styles.button}
           onPress={handleDirectionsToCar}
@@ -88,13 +89,9 @@ const handleDirectionsToDestination = () => {
 const {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
+    width,
     padding: 20,
     backgroundColor: 'white',
-    borderRadius: 10,
-    width: width,
-    position: 'absolute',
-    bottom: 0,
-    zIndex: 99999
   },
   buttonContainer: {
     flex: 1,
@@ -106,7 +103,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 15,
-    paddingHorizontal: 20
+    paddingHorizontal: 35
   },
   text: {
     alignItems: 'center',

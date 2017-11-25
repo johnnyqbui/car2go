@@ -4,8 +4,10 @@ import {
   GET_VEHICLE_INFO, 
   GET_CURRENT_LOCATION,
   UPDATE_PROGRESS_BAR,
-  TOGGLE_MISSION 
-} from '../actions'
+  TOGGLE_MISSION,
+  OPEN_INFOBOX,
+  CLOSE_INFOBOX,
+  TOGGLE_ACCOUNTINFO } from '../actions'
 
 const mapDataState = {
   region: {
@@ -15,6 +17,7 @@ const mapDataState = {
     latitudeDelta: 0.2822,
     longitudeDelta: 0.3021,
   },
+  infoBoxIsOpen: false,
 }
 
 const mapData = (state = mapDataState, action) => {
@@ -24,6 +27,16 @@ const mapData = (state = mapDataState, action) => {
       return {
         ...state,
         region
+      }
+    case OPEN_INFOBOX : 
+      return {
+        ...state,
+        infoBoxIsOpen: true
+      }
+    case CLOSE_INFOBOX : 
+      return {
+        ...state,
+        infoBoxIsOpen: false
       }
     default :
       return state
@@ -41,7 +54,6 @@ const vehicleDataState = {
     destination: {},
     acceptMission: false
   },
-  infoBoxIsOpen: false,
 }
 
 const vehicleData = (state = vehicleDataState, action) => {
@@ -90,7 +102,23 @@ const progressBarData = (state = progressBarState, action) => {
   }
 }
 
+const accountInfoState = {
+    toggleAccountInfo: false,
+}
+
+const accountInfoData = (state = accountInfoState, action) => {
+  switch (action.type) {
+    case TOGGLE_ACCOUNTINFO :
+      return {
+        ...state,
+        toggleAccountInfo: !state.toggleAccountInfo
+      }
+    default :
+      return state
+  }
+}
 export default combineReducers({
+  accountInfoData,
 	vehicleData,
   mapData,
   progressBarData,

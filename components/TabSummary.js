@@ -1,19 +1,24 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native'
 import { gray } from '../utils/colors'
 import profilePic from '../img/temp.png'
+import { toggleAccountInfo } from '../actions'
 
-export default TabSummary = () => {
+const TabSummary = (props) => {
+  const { infoBoxIsOpen, openAccountInfo } = props;
   return (
   	<View style={styles.container}>
-      <TouchableOpacity style={styles.profileImgContainer}>
+      <TouchableOpacity 
+        style={styles.profileImgContainer}
+        onPress={() => openAccountInfo()}>
         <Image 
           source={profilePic} 
           resizeMode='contain'
           style={styles.profilePic}
         />
       </TouchableOpacity>
-      <Text style={styles.text}>Ready For Mission</Text>
+      <Text style={styles.text}>{infoBoxIsOpen ? "Mission Preview" : "Ready For Mission"}</Text>
     </View>
   )
 }
@@ -47,3 +52,21 @@ const styles = StyleSheet.create({
     color: gray
   }
 });
+
+const mapStateToProps = (state) => {
+  const { infoBoxIsOpen } = state.mapData;
+  return {
+    infoBoxIsOpen
+  }
+}
+
+const mapDispatchToProps = (dispatch, { navigation }) => {
+  return {
+    toggleAccountInfo: () => dispatch(toggleAccountInfo()),
+  }
+}
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(TabSummary)
