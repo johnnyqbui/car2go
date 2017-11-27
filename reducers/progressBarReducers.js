@@ -1,4 +1,4 @@
-import { UPDATE_PROGRESS_BAR } from '../actions'
+import { UPDATE_PROGRESS_BAR } from '../actions/types'
 
 const progressBarState = {
     // Must set between 0.1 - 1
@@ -7,7 +7,7 @@ const progressBarState = {
     progress: 0
 }
 
-const progressBarData = (state = progressBarState, action) => {
+export const progressBarData = (state = progressBarState, action) => {
   const { progress } = action
   switch (action.type) {
     case UPDATE_PROGRESS_BAR :

@@ -3,11 +3,11 @@ import { Dimensions, Platform, StatusBar } from "react-native";
 import { StackNavigator, TabNavigator } from "react-navigation";
 import { FontAwesome, MaterialIcons } from "react-native-vector-icons";
 
-import LoadingScreen from "../components/LoadingScreen";
-import Login from "../components/Login";
-import Map from "../components/Map";
-import Earnings from "../components/Earnings";
-import Mission from "../components/Mission";
+import LoadingScreen from "../screens/LoadingScreen";
+import Login from "../screens/Login";
+import Map from "../screens/Map";
+import Earnings from "../screens/Earnings";
+import Mission from "../screens/Mission";
 import { darkBlue, blue, nonActiveTint } from '../utils/colors'
 
 const { width } = Dimensions.get('window');

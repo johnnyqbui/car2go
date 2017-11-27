@@ -14,7 +14,7 @@ const mapDataState = {
   infoBoxIsOpen: false,
 }
 
-const mapData = (state = mapDataState, action) => {
+export const mapData = (state = mapDataState, action) => {
   const { region } = action
   switch (action.type) {
     case GET_CURRENT_LOCATION :

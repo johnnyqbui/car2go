@@ -1,10 +1,10 @@
-import { TOGGLE_ACCOUNTINFO } from '../actions'
+import { TOGGLE_ACCOUNTINFO } from '../actions/types'
 
 const accountInfoState = {
     toggleAccountInfo: false,
 }
 
-const accountInfoData = (state = accountInfoState, action) => {
+export const accountInfoData = (state = accountInfoState, action) => {
   switch (action.type) {
     case TOGGLE_ACCOUNTINFO :
       return {

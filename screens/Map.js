@@ -13,16 +13,16 @@ import {
 import { connect } from 'react-redux'
 import { AppLoading, Location, Permissions, Constants } from 'expo'
 import { Foundation, FontAwesome, Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { getAllVehicles, getVehicleInfo, getCurrentLocation } from '../actions/VehicleActions'
-import { openInfoBox, closeInfoBox } from '../actions/MapActions'
+import { getAllVehicles, getVehicleInfo } from '../actions/VehicleActions'
+import { openInfoBox, closeInfoBox, getCurrentLocation } from '../actions/MapActions'
 
 import MapView, { Circle } from 'react-native-maps'
 import markerIcon from '../img/generic-blue.png'
 import { white, blue } from '../utils/colors'
 import LoadingScreen from './LoadingScreen'
-import InfoBox from './InfoBox'
-import AccountInfo from './AccountInfo'
-import TabSummary from './TabSummary'
+import InfoBox from '../components/InfoBox'
+import AccountInfo from '../components/AccountInfo'
+import TabSummary from '../components/TabSummary'
 
 class Map extends Component {
   

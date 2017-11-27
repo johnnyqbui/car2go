@@ -2,7 +2,7 @@ import {
   GET_ALL_VEHICLES, 
   GET_VEHICLE_INFO, 
   TOGGLE_MISSION
-} from '../actions'
+} from '../actions/types'
 
 const vehicleDataState = {
   markers: [],
@@ -17,7 +17,7 @@ const vehicleDataState = {
   },
 }
 
-const vehicleData = (state = vehicleDataState, action) => {
+export const vehicleData = (state = vehicleDataState, action) => {
   const { allVehicles, selectedMarker, clearDestination } = action
   switch (action.type) {
     case GET_ALL_VEHICLES :
