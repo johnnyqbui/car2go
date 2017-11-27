@@ -9,7 +9,6 @@ import { toggleMission } from '../actions'
 import profilePic from '../img/temp.png'
 
 const AccountInfo = (props) => {
-  // const { toLoginScreen } = props;
   const routetoDispatch = NavigationActions.reset({
     index: 0,
     key: null,
