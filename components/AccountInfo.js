@@ -5,7 +5,6 @@ import { NavigationActions } from "react-navigation";
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { lightGray, gray } from '../utils/colors'
-import { toggleMission } from '../actions'
 import profilePic from '../img/temp.png'
 
 const AccountInfo = (props) => {

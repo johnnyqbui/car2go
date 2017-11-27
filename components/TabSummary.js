@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native'
 import { gray } from '../utils/colors'
 import profilePic from '../img/temp.png'
-import { toggleAccountInfo } from '../actions'
+import { toggleAccountInfo } from '../actions/AccountInfoActions'
 
 const TabSummary = (props) => {
   const { infoBoxIsOpen, openAccountInfo } = props;

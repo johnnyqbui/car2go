@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Dimensions, Animated, Easing } from "react-nati
 import { Card, Button, FormInput } from "react-native-elements";
 import { lightGray, blue } from '../utils/colors'
 import * as Progress from 'react-native-progress';
-import { updateProgressBar } from '../actions'
+import { updateProgressBar } from '../actions/ProgressBarActions'
 
 class LoadingScreen extends Component {
   state = {

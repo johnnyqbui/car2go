@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements'
 import { View, Text, StyleSheet, Platform, Linking, Dimensions } from 'react-native'
 import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { lightGray, blue, alertRed } from '../utils/colors'
-import { toggleMission } from '../actions'
+import { toggleMission } from '../actions/VehicleActions'
 
 const InfoBox = (props) => {
   const { selectedMarker, region, toggleMission, closeInfoBox } = props
