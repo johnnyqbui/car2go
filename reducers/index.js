@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import { mapData } from "./mapReducers";
-import { vehicleData } from "./vehicleReducers";
-import { progressBarData } from "./progressBarReducers";
-import { accountInfoData } from "./accountInfoReducers";
+import { mapData } from "./MapReducers";
+import { vehicleData } from "./VehicleReducers";
+import { progressBarData } from "./ProgressBarReducers";
+import { accountInfoData } from "./AccountInfoReducers";
 
 export default combineReducers({
   mapData,

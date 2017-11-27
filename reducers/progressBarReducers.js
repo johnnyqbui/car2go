@@ -1,13 +1,5 @@
-import { 
-  GET_ALL_VEHICLES, 
-  GET_VEHICLE_INFO, 
-  GET_CURRENT_LOCATION,
-  UPDATE_PROGRESS_BAR,
-  TOGGLE_MISSION,
-  OPEN_INFOBOX,
-  CLOSE_INFOBOX,
-  TOGGLE_ACCOUNTINFO } from '../actions'
-  
+import { UPDATE_PROGRESS_BAR } from '../actions'
+
 const progressBarState = {
     // Must set between 0.1 - 1
     progressIncrements: 1,

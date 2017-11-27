@@ -1,13 +1,9 @@
 import { 
   GET_ALL_VEHICLES, 
   GET_VEHICLE_INFO, 
-  GET_CURRENT_LOCATION,
-  UPDATE_PROGRESS_BAR,
-  TOGGLE_MISSION,
-  OPEN_INFOBOX,
-  CLOSE_INFOBOX,
-  TOGGLE_ACCOUNTINFO } from '../actions'
-  
+  TOGGLE_MISSION
+} from '../actions'
+
 const vehicleDataState = {
   markers: [],
   selectedMarker: {
